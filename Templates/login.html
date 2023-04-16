@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="post" action="/face_recognition/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="face_image">Upload Face Image:</label>
+        <br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
