@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('FaceRecognition.urls')),
+    path('',include('appointments.urls')),
     path('admin/', admin.site.urls),
 ]

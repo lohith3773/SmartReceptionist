@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import UserProfile, Visitor, Manager
 
-# Register your models here.
+admin.site.register(UserProfile)
+admin.site.register(Visitor)
+admin.site.register(Manager)
