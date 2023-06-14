@@ -18,7 +18,7 @@ from django.contrib import messages
 import datetime
 from django.core.mail import send_mail, mail_admins
 from appointments.forms import VisitorAppointmentForm
-
+from appointments.views import index
 
 BASE_DIR = str(settings.BASE_DIR)
 
@@ -128,9 +128,6 @@ def register_manager_view(request):  # Register manager
     return render(request, 'manager/register_mgr.html', {'registration_form': registration_form})
 
 
-def index(request):
-    user = request.user
-    return render(request, 'index.html',{'user':user})
 
 
 def home(request):
@@ -146,8 +143,15 @@ def logout_view(request):
 
 def login_new_manager(request):
     user = authenticate(request,username = 'manager3',password ='ww@123321') 
-    print(user)
     if user is not None:
         login(request, user)
         return redirect('profile_manager')
     return redirect('index')
+
+def login_new_visitor(request):
+    user = authenticate(request,username = 'Lohhhhhhhhhh',password ='ww@123321') 
+    if user is not None:
+        login(request, user)
+        return redirect('visitor_profile')
+    return redirect('index')
+    

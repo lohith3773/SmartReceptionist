@@ -17,10 +17,11 @@
   <style>
     .form-group{padding: 1vw 0}
     .bg-image {
-      background-image: url('https://source.unsplash.com/kKvQJ6rK6S4/660x1000');
+      background-image: url("{% static 'images/forms/contactform.png' %}");
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      background-size:100%
     }
   </style>
 </head>
@@ -71,7 +72,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'book_appointment' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'book_app_visitor' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-file-description"></i>
                 </span>

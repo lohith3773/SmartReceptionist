@@ -1,0 +1,56 @@
+{% extends 'manager/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container-fluid">
+        <div class="container" style="width:500px;">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="h3 mb-4 text-primary font-weight-bold text-center">Send us a Feedback</h1>
+                    <!-- Messages -->
+                   
+                    <!-- End Messages -->
+
+                    <form class="form" method="POST">
+                        {% csrf_token %}
+                    <div class="form-group focused">
+                        <label class="text-l"
+                               for="input-first-name">Your Name</label>
+                        {{ feedback_form.Name|add_class:"form-control form-control-alternative" }}
+                        {{ feedback_form.Name.errors }}
+                    </div>
+
+                    <div class="form-group focused">
+                        <label class="text-l"
+                               for="input-first-name">Your Email</label>
+                        {{ feedback_form.Email|add_class:"form-control form-control-alternative" }}
+                        {{ feedback_form.Email.errors }}
+                    </div>
+
+                                                        <div class="form-group focused">
+                        <label class="text-l"
+                               for="input-first-name">Subject</label>
+                        {{ feedback_form.Subject|add_class:"form-control form-control-alternative" }}
+                        {{ feedback_form.Subject.errors }}
+                    </div>
+                                                                                            <div class="form-group focused">
+                        <label class="text-l"
+                               for="input-first-name">Your Message</label>
+                        {{ feedback_form.Message|add_class:"form-control form-control-alternative" }}
+                        {{ feedback_form.Message.errors }}
+                    </div>
+
+                        <div class="form-group text-center"><input
+                                type="submit"
+                                value="Send Feedback"
+                                class="btn btn-primary text-center"
+                        /></div>
+
+                        {#                                                        {{ app_form.as_p }}#}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

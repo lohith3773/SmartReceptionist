@@ -8,11 +8,11 @@ from django.contrib.auth.models import User, Group
 from FaceRecognition.forms import VisitorRegistrationForm, VisitorUpdateForm, ManagerRegistrationForm, ManagerUpdateForm, FeedbackForm
 from django.utils import timezone
 from FaceRecognition.models import Visitor,Manager, ManagerAppointments
-from appointments.models import Appointment
+from appointments.models import Appointment, ApprovedVisitorAppointment
 from django.contrib import messages
 import datetime
 from django.core.mail import send_mail, mail_admins
-from appointments.forms import VisitorAppointmentForm
+from appointments.forms import VisitorAppointmentForm, ManagerAppointmentForm
 from django.urls import reverse
 
 
@@ -358,31 +358,6 @@ def feedback_visitor_view(request):
         auth.logout(request)
         return redirect('login_vis.html')
 
-def check_visitor(user):  # check if user is visitor
-    return user.groups.filter(name='Visitor').exists()
-
-def check_manager(user):  # check if user is manager
-    return user.groups.filter(name='Manager').exists()
-
-def check_eng_availability(manager, dt, tm):  # check if manager is available in a given slot
-    hour, minute = tm.split(':')
-    ftm = time(int(hour), int(minute), 0)
-    app = Appointment.objects.all().filter(status=True,
-                                           manager=manager,
-                                           appointment_date=dt)  # get all appointments for a given eng and the given date
-
-    if ftm < time(9, 0, 0) or ftm > time(17, 0, 0):  # if time is not in between 9AM to 5PM, reject
-        return False
-
-    if time(12, 0, 0) < ftm < time(13, 0, 0):  # if time is in between 12PM to 1PM, reject
-        return False
-
-    for a in app:
-        if ftm == a.appointment_time and dt == a.appointment_date:  # if some other appointment has the same slot, reject
-            return False
-
-    return True
-
 #MANAGER
 
 def dashboard_mgr_view(request):
@@ -559,6 +534,18 @@ def app_details_mgr_view(request, pk):
         auth.logout(request)
         return redirect('login_adm.html')
 
+def complete_app_eng_action(request, pk):
+    if check_manager(request.user):
+        # get information from database and render in html webpage
+        app = Appointment.objects.get(id=pk)
+        app.completed = True
+        app.save()
+
+        messages.add_message(request, messages.INFO, 'Appointment completed successfully!')
+        return redirect('view_app_mgr.html')
+    else:
+        auth.logout(request)
+        return redirect('login_eng.html')
 
 
 def get_link_mgr_action(request, pk):
@@ -575,13 +562,231 @@ def get_link_mgr_action(request, pk):
             esf.save()
 
         messages.add_message(request, messages.INFO, 'Appointment approved!')
-        return redirect(reverse('dashboard_eng.html'))
+        return redirect(reverse('manager_appointments'))
     else:
         auth.logout(request)
         return redirect('login_eng.html')
 
-def completed_meetings():
-    return
+def approved_app_eng_view(request):
+    if check_manager(request.user):
+        eng = Manager.objects.get(engineer_id=request.user.id)  # get engineer
+
+        incomplete_appointments = []
+        for aca in ApprovedVisitorAppointment.objects.filter(
+                engineer=eng).all():  # get all customers approved under this engineer
+            cust = aca.visitor
+            if cust and not aca.completed_date:
+                incomplete_appointments.append([eng.first_name, cust.first_name,
+                                                aca.approval_date, aca.completed_date, aca.pk])
+
+        completed_appointments = []
+        for aca in ApprovedVisitorAppointment.objects.filter(
+                engineer=eng).all():  # get all customers approved under this engineer
+            cust = aca.visitor
+            if cust and aca.completed_date:
+                completed_appointments.append([eng.first_name, cust.first_name,
+                                               aca.approval_date, aca.completed_date, aca.pk])
+        return render(request, 'manager/view_approved_app_eng.html',
+                      {'incomplete_appointments': incomplete_appointments,
+                       'completed_appointments': completed_appointments})
+    else:
+        auth.logout(request)
+        return redirect('login_eng.html')
+
+def feedback_manager_view(request):
+    if check_manager(request.user):
+        eng = Manager.objects.get(manager=request.user.id)
+        feedback_form = FeedbackForm()
+        if request.method == 'POST':
+            feedback_form = FeedbackForm(request.POST)
+            if feedback_form.is_valid():  # if form is valid
+                email = feedback_form.cleaned_data['Email']  # get email from form
+                name = feedback_form.cleaned_data['Name']  # get name from form
+                subject = "You have a new Feedback from {}:<{}>".format(name, feedback_form.cleaned_data[
+                    'Email'])  # get subject from form
+                message = feedback_form.cleaned_data['Message']  # get message from form
+
+                message = "Subject: {}\n" \
+                          "Date: {}\n" \
+                          "Message:\n\n {}" \
+                    .format(
+                    dict(feedback_form.subject_choices).get(feedback_form.cleaned_data['Subject']),
+                    datetime.datetime.now(),
+                    feedback_form.cleaned_data['Message']
+                )
+
+                try:
+                    mail_admins(subject, message)
+                    messages.add_message(request, messages.INFO, 'Thank you for submitting your feedback.')
+
+                    return redirect('feedback_eng.html')
+                except:
+                    feedback_form.add_error('Email',
+                                            'Try again.')
+                    return render(request, 'manager/feedback_mgr.html', {'feedback_form': feedback_form})
+        return render(request, 'manager/feedback_mgr.html', {'eng': eng, 'feedback_form': feedback_form})
+    else:
+        auth.logout(request)
+        return redirect('login_eng.html')
+
+def book_app_manager_view(request):
+    if check_manager(request.user):
+        vis = Manager.objects.filter(manager=request.user.id).first()
+        app_details = []
+
+        for app in Appointment.objects.filter(manager=vis, status=False).all():
+            e = app.visitor
+            if e:
+                app_details.append([e.first_name, e.last_name,
+                                    app.description, app.appointment_date, app.appointment_time, app.status])
+
+        if request.method == "POST":  # if visitor books an appointment
+            app_form = ManagerAppointmentForm(request.POST)
+
+            if app_form.is_valid():  # if form is valid
+                eng_id = int(app_form.cleaned_data.get('visitor'))  # get manager id from form
+                eng = Visitor.objects.all().filter(id=eng_id).first()  # get manager from form
+
+                if check_mgr_availability(eng,  # check if manager is available during that slot
+                                          app_form.cleaned_data.get('app_date'),
+                                          app_form.cleaned_data.get('app_time')):
+                    app_date = app_form.cleaned_data.get('app_date')  # get appointment date
+                    if timezone.now().date() < app_date:  # check if appointment date is valid
+                        app = Appointment(manager=vis,
+                                          visitor=eng,
+                                          description=app_form.cleaned_data.get('description'),
+                                          appointment_date=app_form.cleaned_data.get('app_date'),
+                                          appointment_time=app_form.cleaned_data.get('app_time'),
+                                          status=False)  # create appointment instance, which is unapproved
+                        app.save()
+                        messages.add_message(request, messages.INFO, 'Your appointment is received and pending.')
+                        return redirect('book_app_manager')
+                    else:
+                        app_form.add_error('app_date', 'Invalid date.')
+                else:  # if manager is busy
+                    app_form.add_error('app_time', 'Slot Unavailable.')
+                return render(request, 'manager/book_app_mgr.html',
+                              {'app_form': app_form, 'app_details': app_details})
+            else:  # if form is invalid
+                print(app_form.errors)
+        else:
+            app_form = ManagerAppointmentForm()
+        return render(request, 'manager/book_app_mgr.html',
+                      {'vis': vis, 'app_form': app_form, 'app_details': app_details})
+    else:
+        auth.logout(request)
+        return redirect('login_vis.html')
+
+def completed_app_managers_view(request):
+    if check_manager(request.user):
+        # get information from database and render in html webpage
+        vis = Manager.objects.filter(manager=request.user.id).first()
+
+        total_app = Appointment.objects.filter(manager=vis).count()
+        total_approved_app = Appointment.objects.filter(status=True, manager=vis).count()
+        total_pending_app = Appointment.objects.filter(status=False, manager=vis).count()
+        # app_total = Appointment.objects.filter(status=True, visitor=vis).all()
+
+        completed_appointment_details = []
+        for app in Appointment.objects.filter(status=True, completed=True,
+                                              manager=vis).all():  # get all approved appointments
+            e = app.manager
+            c = app.visitor
+            if e and c:
+                completed_appointment_details.append(
+                    [e.first_name, e.last_name, e.role, c.first_name, c.last_name,
+                     app.pk, app.description, app.appointment_date, app.appointment_time,
+                     app.status, app.completed, app.rating])
+
+        messages.add_message(request, messages.INFO, 'You have {0} appointments.'.format(total_approved_app))
+
+        context = {
+            'vis': vis,
+            'total_app': total_app,
+            'total_approved_app': total_approved_app,
+            'total_pending_app': total_pending_app,
+            'completed_appointment_details': completed_appointment_details,
+        }
+
+        return render(request, 'manager/completed_app_manager.html',
+                      context)
+    else:
+        auth.logout(request)
+        return redirect('login_vis.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def check_visitor(user):  # check if user is visitor
+    return user.groups.filter(name='Visitor').exists()
+
+def check_manager(user):  # check if user is manager
+    return user.groups.filter(name='Manager').exists()
+
+def check_eng_availability(manager, dt, tm):  # check if manager is available in a given slot
+    hour, minute = tm.split(':')
+    ftm = time(int(hour), int(minute), 0)
+    app = Appointment.objects.all().filter(status=True,
+                                           manager=manager,
+                                           appointment_date=dt)  # get all appointments for a given eng and the given date
+
+    if ftm < time(9, 0, 0) or ftm > time(17, 0, 0):  # if time is not in between 9AM to 5PM, reject
+        return False
+
+    if time(12, 0, 0) < ftm < time(13, 0, 0):  # if time is in between 12PM to 1PM, reject
+        return False
+
+    for a in app:
+        if ftm == a.appointment_time and dt == a.appointment_date:  # if some other appointment has the same slot, reject
+            return False
+
+    return True
+
+def check_mgr_availability(visitor, dt, tm):  # check if manager is available in a given slot
+    hour, minute = tm.split(':')
+    ftm = time(int(hour), int(minute), 0)
+    app = Appointment.objects.all().filter(status=True,
+                                           visitor=visitor,
+                                           appointment_date=dt)  # get all appointments for a given eng and the given date
+
+    if ftm < time(9, 0, 0) or ftm > time(17, 0, 0):  # if time is not in between 9AM to 5PM, reject
+        return False
+
+    if time(12, 0, 0) < ftm < time(13, 0, 0):  # if time is in between 12PM to 1PM, reject
+        return False
+
+    for a in app:
+        if ftm == a.appointment_time and dt == a.appointment_date:  # if some other appointment has the same slot, reject
+            return False
+
+    return True
+
 
 def contact_us(request):
-    return render(request, 'visitor/contact.html')
+    if check_visitor(request.user):    
+        return render(request, 'visitor/contact.html', {'log_user':'visitor'})
+    
+    if check_manager(request.user):    
+        return render(request, 'visitor/contact.html', {'log_user':'manager'})
+    return redirect('/')
+
+def index(request):
+    user = request.user
+    if check_visitor(request.user):    
+        return redirect('/visitor/profile')
+    if check_manager(request.user):    
+        return redirect('/manager/profile')
+    return redirect('/')
