@@ -1,0 +1,185 @@
+{% extends 'visitor/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container-fluid">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800 text-center">Your Profile</h1>
+    <div class="main-panel">
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="main-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+                                <div class="card card-profile">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-3 order-lg-2">
+                                            <div class="card-profile-image">
+                                                <a href="#">
+                                                    <img src="{{ vis.image.url }}"
+                                                         class="rounded-circle" alt="">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br><br><br><br>
+                                    <div class="card-body pt-0">
+                                        <div class="row">
+                                            <div class="center">
+                                                <div class="profile-card-subtitle">
+                                                    <div class="text-center">
+                                                        <h3 class="text-primary">
+                                                            <b>{{ vis.first_name }} {{ vis.last_name }}</b><span
+                                                                class="font-weight-light">, {{ age }}</span>
+                                                        </h3>
+                                                        <br>
+                                                        <i class="fa fa-map-pin"></i> <br>
+                                                        {{ vis.postcode }}
+                                                        <br>
+                                                        {{ vis.city }}, {{ vis.country }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-8 order-xl-1">
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="card">
+                                        <p>
+                                        <div class="card-body">
+                                            <div class="pl-lg-4">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group focused">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-username">Username</label>
+                                                            <input readonly type="text"
+                                                                   id="input-username"
+                                                                   class="form-control form-control-alternative"
+                                                                   placeholder="{{ user.username }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-email">Email
+                                                                Address</label>
+                                                            <input readonly type="email"
+                                                                   id="input-email"
+                                                                   class="form-control form-control-alternative"
+                                                                   placeholder="{{ user.email_address }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group focused">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-first-name">First
+                                                                Name</label>
+                                                            {{ visitor_update_form.first_name|add_class:"form-control form-control-alternative" }}
+                                                            {{ visitor_update_form.first_name.errors }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-last-name">Last
+                                                                Name</label>
+                                                            {{ visitor_update_form.last_name|add_class:"form-control form-control-alternative" }}
+                                                            {{ visitor_update_form.last_name.errors }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group focused">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-age">Age</label>
+                                                            <input readonly type="text"
+                                                                   id="input-username"
+                                                                   class="form-control form-control-alternative"
+                                                                   placeholder="{{ age }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-date">Date of
+                                                                Birth</label>
+                                                            {{ visitor_update_form.dob|add_class:"form-control form-control-alternative" }}
+                                                            {{ visitor_update_form.dob.errors }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-1">
+                                            <br>
+                                            <div class="pl-lg-4">
+                                                
+                                                
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <div class="form-group focused">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-city">City</label>
+                                                            {{ visitor_update_form.city|add_class:"form-control form-control-alternative" }}
+                                                            {{ visitor_update_form.city.errors }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="form-group focused">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-country">Country</label>
+                                                            {{ visitor_update_form.country|add_class:"form-control form-control-alternative" }}
+                                                            {{ visitor_update_form.country.errors }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="form-group">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-postalcode">Postcode</label>
+                                                            {{ visitor_update_form.postcode|add_class:"form-control form-control-alternative" }}
+                                                            {{ visitor_update_form.postcode.errors }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
+                                                                   for="input-image">Profile
+                                                                Picture</label>
+                                                            {{ visitor_update_form.image|add_class:"form-control form-control-alternative" }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group text-center">
+                                            <button class="btn btn-primary" type="submit">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

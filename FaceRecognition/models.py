@@ -38,5 +38,11 @@ class Manager(models.Model):
     country = models.CharField(max_length=100, default="country")
     
     def __str__(self):
-       return f'{self.manager.username} Visitor Profile'
-    
+       return f'{self.manager.username} Manager Profile'
+
+class ManagerAppointments(models.Model):
+    manager = models.ForeignKey(Manager, on_delete=models.CASCADE, related_name="EngineerServiceField")  # engineer fk
+    app_total = models.IntegerField(default=0)  # total customers/appointments completed by engineer
+
+    def __str__(self):
+        return f'{self.manager.first_name} appointments Information'

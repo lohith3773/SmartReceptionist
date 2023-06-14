@@ -1,0 +1,86 @@
+{% extends 'visitor/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Your Appointments</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        
+
+    </div>
+    <!-- Content Row: Completed Appointments -->
+    <div class="row">
+        <!-- Content Column -->
+        <div class="col-lg-12 mb-4">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">All Completed Appointments</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Manager</th>
+                                <th>Service Field</th>
+                                <th>Appointment Date/Time</th>
+                                <th>Description</th>
+                                <th>Approval</th>
+                                <th>Complete/Incomplete</th>
+                                <th>Details</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for a in completed_appointment_details %}
+                                <tr>
+                                    <td>{{ a.5 }}</td>
+                                    <td>{{ a.0 }} {{ a.1 }}</td>
+                                    <td>{{ a.2 }}</td>
+                                    <td>{{ a.7 }} / {{ a.8 }} </td>
+                                    <td>{{ a.6 }}</td>
+                                    {% if a.10 is True %}
+                                        <td style="background-color: lightgreen; font-weight: bold">
+                                            Approved
+                                        </td>
+                                    {% elif  a.10 is False %}
+                                        <td style="background-color: lightyellow">Pending</td>
+                                    {% endif %}
+                                                                                    {% if a.11 is True %}
+                                        <td style="background-color: lightgreen; font-weight: bold">
+                                            Completed
+                                        </td>
+                                    {% elif  a.11 is False %}
+                                        <td style="background-color: lightyellow">Incomplete</td>
+                                    {% endif %}
+                <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'visitor_appointment_details' a.5 %}">Details</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="text-center">
+         <a href="{% url 'visitor_appointments' %}"><button type="button" class="btn btn-primary">Back to Main View</button></a>
+        <button type="button" class="btn btn-primary" disabled>View All Appointments</button>
+    </div>
+
+
+    <!-- End of Main Content -->
+    <div id="divider-space-50"></div>
+</div>
+{% endblock content %}

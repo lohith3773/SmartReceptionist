@@ -17,6 +17,7 @@
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
+    {% block sidebar %}
     <aside class="left-sidebar">
       <!-- Sidebar scroll-->
       <div>
@@ -49,7 +50,7 @@
               <span class="hide-menu">APPOINTMENTS</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'view_app_cust.html' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'visitor_appointments' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-article"></i>
                 </span>
@@ -57,7 +58,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'book_app_cust.html' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'book_appointment' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-file-description"></i>
                 </span>
@@ -65,7 +66,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'view_all_app_cust.html' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'all_visitor_appointments' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-cards"></i>
                 </span>
@@ -73,7 +74,7 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'view_all_app_cust.html' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'all_visitor_appointments' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-article"></i>
                 </span>
@@ -85,7 +86,7 @@
               <span class="hide-menu">REACH US</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'feedback_cust.html' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'visitor_feedback' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-login"></i>
                 </span>
@@ -126,6 +127,7 @@
       </div>
       <!-- End Sidebar scroll-->
     </aside>
+    {% endblock %}
     <!--  Sidebar End -->
     <!--  Main wrapper -->
     <div class="body-wrapper">

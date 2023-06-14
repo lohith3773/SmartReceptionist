@@ -1,0 +1,184 @@
+{% extends 'visitor/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container-fluid">
+
+    {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+    {% endif %}
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Your Appointments</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
+                                Total Appointments Made
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_app }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-l font-weight-bold text-success text-uppercase mb-1">
+                                Total Approved Appointments
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_approved_app }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-l font-weight-bold text-warning text-uppercase mb-1">
+                                Total Pending Appointments
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_pending_app }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% comment %}                        <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-info text-uppercase mb-1">Tasks
+                                </div>
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="progress progress-sm mr-2">
+                                            <div class="progress-bar bg-info" role="progressbar"
+                                                 style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                 aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>{% endcomment %}
+
+    </div>
+
+    <!-- Content Row: Pending Appointments -->
+    <div class="row">
+        <!-- Content Column -->
+        <div class="col-lg-12 mb-4">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Pending Appointments</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Manager</th>
+                                <th>Role</th>
+                                <th>Appointment Date/Time</th>
+                                <th>Description</th>
+                                <th>Approval</th>
+                                <th>Complete/Incomplete</th>
+                                <th>Details</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for a in pending_appointment_details %}
+                                <tr>
+                                    <td>{{ a.5 }}</td>
+                                    <td>{{ a.0 }} {{ a.1 }}</td>
+                                    <td>{{ a.2 }}</td>
+                                    <td>{{ a.7 }} / {{ a.8 }} </td>
+                                    <td>{{ a.6 }}</td>
+                                    {% if a.10 is True %}
+                                        <td style="background-color: lightgreen; font-weight: bold">
+                                            Approved
+                                        </td>
+                                    {% elif a.10 is False %}
+                                        <td style="background-color: lightyellow">Pending  </td>
+                                    {% endif %}
+                                    {% if a.9 is True %}
+                                        <td style="background-color: lightgreen; font-weight: bold">
+                                            Completed
+                                        </td>
+                                    {% elif a.9 is False %}
+                                        <td style="background-color: lightyellow">Incomplete</td>
+                                    {% endif %}
+                                    <td class="text-center"><a class="btn btn-outline-primary"
+                                                               href="{% url 'visitor_appointment_details' a.5 %}"
+                                                               >Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="button" class="btn btn-primary" disabled>Back to Main View</button>
+        </a>
+        <a href="{% url 'all_visitor_appointments' %}">
+            <button type="button" class="btn btn-primary">View All Appointments</button>
+        </a>
+    </div>
+
+
+    <!-- End of Main Content -->
+    <div id="divider-space-50"></div>
+</div>
+{% endblock %}
