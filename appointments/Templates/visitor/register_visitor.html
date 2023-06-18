@@ -71,6 +71,11 @@
                         {{ registration_form.country.errors }}
                     </div>
                     <div class="mb-4">
+                      <label class="form-label" for="input-postcode">Address</label>
+                      {{ registration_form.address|add_class:"form-control" }}
+                      {{ registration_form.address.errors }}
+                    </div>
+                    <div class="mb-4">
                         <label class="form-label" for="input-postcode">Postcode</label>
                         {{ registration_form.postcode|add_class:"form-control" }}
                         {{ registration_form.postcode.errors }}

@@ -27,7 +27,7 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect('index')
     recognized_user = recognize_face() # call the recognize_face function
-    # check if user is authenticated5ttyt6
+    # check if user is authenticated
     if recognized_user is not None:
         print(recognized_user)
         if(recognized_user == "lohi"):
