@@ -1,0 +1,86 @@
+{% extends 'adminTemp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Visitors</h1>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Visitors
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ cust_count }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Content Row: Recent Pending Visitors -->
+        <div class="row">
+            <!-- Content Column -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">All Visitors</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Visitor</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Country</th>
+                                </tr>
+                                </thead>
+
+
+                                <tbody>
+                                {% for c in cust %}
+                                    <tr>
+                                        <td>{{ c.id }}</td>
+                                        <td>{{ c.first_name }} {{ c.last_name }}
+                                        </td>
+                                    <td>{{ c.email_address }}</td>
+                                    <td>{{ c.address }}, {{ c.postcode }}</td>
+                                    <td>{{ c.country}} </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- End of Main Content -->
+        <div id="divider-space-50"></div>
+    </div>
+{% endblock %}

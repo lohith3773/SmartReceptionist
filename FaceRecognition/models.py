@@ -36,7 +36,7 @@ class Manager(models.Model):
     city = models.CharField(max_length=100, default="city")  
     postcode = models.IntegerField(default=0)  
     country = models.CharField(max_length=100, default="country")
-    
+    status = models.BooleanField(default=False)  # engineer status(approved/on-hold)
     def __str__(self):
        return f'{self.manager.username} Manager Profile'
 
@@ -46,3 +46,4 @@ class ManagerAppointments(models.Model):
 
     def __str__(self):
         return f'{self.manager.first_name} appointments Information'
+

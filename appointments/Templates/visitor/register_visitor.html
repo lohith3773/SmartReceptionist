@@ -33,7 +33,7 @@
                   <img src="../assets/images/logos/dark-logo.svg" width="180" alt="">
                 </a>
                 <p class="text-center">Smart Receptionist</p>
-                <form>
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-4">
                         <label class="form-label" for="input-username">Username</label>
@@ -90,7 +90,7 @@
                         {{ registration_form.password2|add_class:"form-control" }}
                         {{ registration_form.password2.errors }}
                     </div>
-                  <a href="./index.html" class="btn w-100 py-8 fs-4 mb-4 rounded-2" style="background-color:#9D8ACA; color:white">Sign Up</a>
+                  <input type="submit" class="btn w-100 py-8 fs-4 mb-4 rounded-2" style="background-color:#9D8ACA; color:white" value="Register">
                   <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
                     <a class="text-primary fw-bold ms-2" href="{% url 'index' %}">Sign In</a>

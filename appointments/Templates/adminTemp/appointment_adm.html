@@ -1,0 +1,139 @@
+{% extends 'adminTemp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Appointments</h1>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Appointments
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ app_count }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-success text-uppercase mb-1">
+                                    Total Approved Appointments
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ approved_app_total }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-warning text-uppercase mb-1">
+                                    Total Pending Appointments
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_app_total }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Row: Recent Pending Appointments -->
+        <div class="row">
+            <!-- Content Column -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Pending Appointments</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Visitor</th>
+                                    <th>Engineer</th>
+                                    <th>Appointment Date/Time</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Complete/Incomplete</th>
+                                </tr>
+                                </thead>
+
+
+                                <tbody>
+                                {% for a in app %}
+                                    <tr>
+                                        <td>{{ a.id }}</td>
+                                        <td>{{ a.visitor.first_name }} {{ a.visitor.last_name }}
+                                        </td>
+                                        <td>{{ a.manager.first_name }} {{ a.manager.last_name }} &nbsp; ({{ a.manager.role }})
+                                        </td>
+                                        <td>{{ a.appointment_date }} / {{ a.appointment_time }}</td>
+                                    <td>{{ a.description }}</td>
+                                        {% if a.status is True %}
+                                            <td><b>Approved</b></td>
+                                        {% elif  a.status is False %}
+                                            <td style="background-color: lightyellow">Pending</td>
+                                        {% endif %}
+                                        {% if a.completed is True %}
+                                            <td><b>Completed</b></td>
+                                        {% elif  a.completed is False %}
+                                            <td style="background-color: lightyellow">Incomplete</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" disabled>Back to Main View</button>
+            <a href="{% url 'view_all_app_admin' %}"><button type="button" class="btn btn-primary">View All Appointments</button></a>
+        </div>
+
+
+        <!-- End of Main Content -->
+        <div id="divider-space-50"></div>
+    </div>
+{% endblock %}

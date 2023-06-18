@@ -1,0 +1,131 @@
+{% extends 'adminTemp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Managers</h1>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Managers
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ eng_count }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-success text-uppercase mb-1">
+                                    Approved Managers
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ eng_approved }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-warning text-uppercase mb-1">
+                                    Pending Approval
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ eng_pending }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Content Row: Recent Pending Visitors -->
+        <div class="row">
+            <!-- Content Column -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Pending Managers</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Manager</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+
+
+                                <tbody>
+                                {% for e in eng %}
+                                    <tr>
+                                        <td>{{ e.id }}</td>
+                                        <td>{{ e.first_name }} {{ e.last_name }}
+                                        </td>
+                                    <td>{{ e.role }}</td>
+                                        {% if e.status is True %}
+                                            <td><b>Approved</b></td>
+                                        {% elif  e.status is False %}
+                                            <td style="background-color: lightyellow">Pending</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" disabled>Back to Main View</button>
+            <a href="{% url 'approve_manager' %}"><button type="button" class="btn btn-primary">Approve Managers</button></a>
+            <a href="{% url 'view_all_mgr' %}"><button type="button" class="btn btn-primary">View Active Managers</button></a>
+        </div>
+
+
+        <!-- End of Main Content -->
+        <div id="divider-space-50"></div>
+    </div>
+{% endblock %}

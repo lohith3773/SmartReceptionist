@@ -7,7 +7,13 @@
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block page-title %}Smart Receptionist | Profile - Admin{% endblock %}</title>
+        <title>{% block page-title %}Smart Receptionist | Approve Visitors - Admin{% endblock %}</title>
+
+        <style>
+            .container {
+                width: 500px;
+            }
+        </style>
     </head>
 
     <body id="page-top">
@@ -51,7 +57,7 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'profile_adm.html' %}">
                     <i class="fas fa-fw fa-user-alt"></i>
                     <span>Profile</span></a>
@@ -77,16 +83,16 @@
                     <span>Appointments</span></a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="{% url 'admin_visitors' %}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Visitors</span></a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'manager_adm.html' %}">
+                <a class="nav-link" href="{% url 'engineer_adm.html' %}">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Managers</span></a>
+                    <span>Engineers</span></a>
             </li>
 
             <li class="nav-item">
@@ -330,199 +336,153 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    <!-- End Messages -->
+
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-4 text-gray-800 text-center">Your Profile</h1>
-                    <div class="main-panel">
-                        <div class="main-content">
-                            <!-- Header -->
-                            <div class="header">
-                                <div class="main-content">
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
-                                                <div class="card card-profile">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-lg-3 order-lg-2">
-                                                            <div class="card-profile-image">
-                                                                <a href="#">
-                                                                    <img src="{{ adm.image.url }}"
-                                                                         class="rounded-circle" alt="">
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <br><br><br><br>
-                                                    <div class="card-body pt-0">
-                                                        <div class="row">
-                                                            <div class="center">
-                                                                <div class="profile-card-subtitle">
-                                                                    <div class="text-center">
-                                                                        <h3 class="text-primary">
-                                                                            <b>{{ adm.first_name }} {{ adm.last_name }}</b><span
-                                                                                class="font-weight-light">, {{ age }}</span>
-                                                                        </h3>
-                                                                        <br>
-                                                                        <i class="fa fa-map-pin"></i> <br>
-                                                                        {{ adm.address }}, {{ adm.postcode }} <br>
-                                                                        {{ adm.city }}, {{ adm.country }}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Visitors</h1>
+                    </div>
 
-                                            <div class="col-xl-8 order-xl-1">
-                                                <form method="POST" enctype="multipart/form-data">
-                                                    {% csrf_token %}
-                                                    <div class="card">
-                                                        <p>
-                                                        <div class="card-body">
-                                                            <div class="pl-lg-4">
-                                                                <div class="row">
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group focused">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-username">Username</label>
-                                                                            <input readonly type="text"
-                                                                                   id="input-username"
-                                                                                   class="form-control form-control-alternative"
-                                                                                   placeholder="{{ user.username }}">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-email">Email
-                                                                                Address</label>
-                                                                            <input readonly type="email"
-                                                                                   id="input-email"
-                                                                                   class="form-control form-control-alternative"
-                                                                                   placeholder="{{ user.email }}">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group focused">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-first-name">First
-                                                                                Name</label>
-                                                                            {{ admin_update_form.first_name|add_class:"form-control form-control-alternative" }}
-                                                                            {{ admin_update_form.first_name.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-last-name">Last
-                                                                                Name</label>
-                                                                            {{ admin_update_form.last_name|add_class:"form-control form-control-alternative" }}
-                                                                            {{ admin_update_form.last_name.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group focused">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-age">Age</label>
-                                                                            <input readonly type="text"
-                                                                                   id="input-username"
-                                                                                   class="form-control form-control-alternative"
-                                                                                   placeholder="{{ age }}">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-date">Date of
-                                                                                Birth</label>
-                                                                            {{ admin_update_form.dob|add_class:"form-control form-control-alternative" }}
-                                                                            {{ admin_update_form.dob.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <hr class="my-1">
-                                                            <br>
-                                                            <div class="pl-lg-4">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="form-group focused">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-address">Address</label>
-                                                                            {{ admin_update_form.address|add_class:"form-control form-control-alternative" }}
-                                                                            {{ admin_update_form.address.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-lg-4">
-                                                                        <div class="form-group focused">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-city">City</label>
-                                                                            {{ admin_update_form.city|add_class:"form-control form-control-alternative" }}
-                                                                            {{ admin_update_form.city.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-4">
-                                                                        <div class="form-group focused">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-country">Country</label>
-                                                                            {{ admin_update_form.country|add_class:"form-control form-control-alternative" }}
-                                                                            {{ admin_update_form.country.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-4">
-                                                                        <div class="form-group">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-postalcode">Postcode</label>
-                                                                            {{ admin_update_form.postcode|add_class:"form-control form-control-alternative" }}
-                                                                            {{ admin_update_form.postcode.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-12">
-                                                                        <div class="form-group">
-                                                                            <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                                   for="input-image">Profile
-                                                                                Picture</label>
-                                                                            {{ admin_update_form.image|add_class:"form-control form-control-alternative" }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                    <!-- Content Row -->
+                    <div class="row">
 
-                                                        <div class="form-group text-center">
-                                                            <button class="btn btn-primary" type="submit">
-                                                                Update
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
+                                                Total Visitors
                                             </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ cust_count }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-l font-weight-bold text-success text-uppercase mb-1">
+                                                Approved Visitors
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ cust_approved }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-4 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-l font-weight-bold text-warning text-uppercase mb-1">
+                                                Pending Approval
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ cust_pending }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Content Row: Pending Appointments -->
+                    <div class="row">
+                        <!-- Content Column -->
+                        <div class="col-lg-12 mb-4">
+                            <!-- DataTales Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Pending Visitors</h6>
+                                </div>
+                                <div class="card-body">
+
+                        <!-- Messages -->
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }}">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        <!-- End Messages -->
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Picture</th>
+                                                <th>Visitor</th>
+                                                <th>Company Name</th>
+                                                <th>Company Address</th>
+                                                <th>Status</th>
+                                                <th>Approval</th>
+                                            </tr>
+                                            </thead>
+
+
+                                            <tbody>
+                                            {% for c in cust %}
+                                                <tr>
+                                                    <td>{{ c.id }}</td>
+                                                    <td class="text-center"><img src="{{ c.image.url }}" width="60 px"
+                                                                                 height="60 px" class="rounded-circle">
+                                                    </td>
+                                                    <td>{{ c.first_name }} {{ c.last_name }}
+                                                    </td>
+                                                    <td>{{ c.company_name }}</td>
+                                                    <td>{{ c.company_address }}, {{ c.postcode }}, {{ c.city }}, {{ c.country }}</td>
+                                                    {% if c.status is True %}
+                                                        <td><b>Approved</b></td>
+                                                    {% elif  c.status is False %}
+                                                        <td style="background-color: lightyellow">Pending</td>
+                                                    {% endif %}
+                                                    <td class="text-center"><a class="btn btn-primary" href="{% url 'approve_cust_action' c.id %}">Approve</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="text-center">
+                        <a href="{% url 'admin_visitors' %}"><button type="button" class="btn btn-primary">Back to Main View</button></a>
+                        <button type="button" class="btn btn-primary" disabled>Approve Visitors</button>
+                        <a href="{% url 'view_all_cust.html' %}"><button type="button" class="btn btn-primary">View Active Visitors</button></a>
+                    </div>
+
+
+                    <!-- End of Main Content -->
+                    <div id="divider-space-50"></div>
                 </div>
-                <!-- /.container-fluid -->
+                <!-- End of Content Wrapper -->
 
             </div>
-            <!-- End of Main Content -->
-            <div id="divider-space-50"></div>
+            <!-- End of Page Wrapper -->
+
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -533,18 +493,15 @@
             </footer>
             <!-- End of Footer -->
 
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+
+
+
         </div>
-        <!-- End of Content Wrapper -->
-
     </div>
-    <!-- End of Page Wrapper -->
-
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
     </body>
     </html>
 

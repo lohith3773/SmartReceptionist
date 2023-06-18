@@ -47,18 +47,18 @@
                                     <td>{{ a.2 }}</td>
                                     <td>{{ a.7 }} / {{ a.8 }} </td>
                                     <td>{{ a.6 }}</td>
-                                    {% if a.10 is True %}
+                                    {% if a.9 is True %}
                                         <td style="background-color: lightgreen; font-weight: bold">
                                             Approved
                                         </td>
-                                    {% elif  a.10 is False %}
+                                    {% elif  a.9 is False %}
                                         <td style="background-color: lightyellow">Pending</td>
                                     {% endif %}
-                                                                                    {% if a.11 is True %}
+                                    {% if a.10 is True %}
                                         <td style="background-color: lightgreen; font-weight: bold">
                                             Completed
                                         </td>
-                                    {% elif  a.11 is False %}
+                                    {% elif  a.10 is False %}
                                         <td style="background-color: lightyellow">Incomplete</td>
                                     {% endif %}
                 <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'visitor_appointment_details' a.5 %}">Details</a></td>

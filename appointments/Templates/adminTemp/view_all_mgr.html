@@ -1,0 +1,146 @@
+{% extends 'adminTemp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Engineers</h1>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Engineers
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ eng_count }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-success text-uppercase mb-1">
+                                    Approved Engineers
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ eng_approved }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-warning text-uppercase mb-1">
+                                    Pending Approval
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ eng_pending }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Row: Recent Pending Visitors -->
+        <div class="row">
+            <!-- Content Column -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Active Engineers</h6>
+                    </div>
+                    <div class="card-body">
+
+                                            <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            <!-- End Messages -->
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Picture</th>
+                                    <th>Engineer</th>
+                                    <th>Service Field</th>
+                                    <th>Date of Birth</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+
+
+                                <tbody>
+                                {% for e in eng_details %}
+                                    <tr>
+                                        <td>{{ e.0 }}</td>
+                                        <td class="text-center"><img src="{{ e.1 }}" width="60 px" height="60 px" class="rounded-circle"></td>
+                                        <td>{{ e.2 }} {{ e.3 }}</td>
+                                    <td>{{ e.9 }}</td>
+                                        <td>{{ e.4 }}</td>
+                                        <td>{{ e.5 }}, {{ e.6 }}, {{ e.7 }}, {{ e.8 }}</td>
+                                        {% if e.10 is True %}
+                                            <td style="background-color: lightgreen"><b>Approved</b></td>
+                                        {% elif  e.10 is False %}
+                                            <td style="background-color: lightyellow">Pending</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="text-center">
+            <a href="{% url 'admin_managers' %}"><button type="button" class="btn btn-primary">Back to Main View</button></a>
+            <a href="{% url 'approve_manager' %}"><button type="button" class="btn btn-primary">Approve Engineers</button></a>
+            <button type="button" class="btn btn-primary" disabled>View Active Engineers</button>
+        </div>
+
+
+        <!-- End of Main Content -->
+        <div id="divider-space-50"></div>
+    </div>
+{% endblock %}

@@ -29,7 +29,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
-                                Total Appointments
+                                Upcoming Appointments
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ app_count }}</div>
                         </div>
@@ -95,7 +95,7 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Customer</th>
+                                <th>Visitor</th>
                                 <th>Appointment Date/Time</th>
                                 <th>Description</th>
                                 <th>Approval</th>
@@ -146,7 +146,7 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Customer</th>
+                                <th>Visitor</th>
                                 <th>Appointment Date/Time</th>
                                 <th>Description</th>
                                 {% comment %} <th>Room Name</th> {% endcomment %}
@@ -208,12 +208,12 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Customer</th>
-                                <th>Company Name</th>
+                                <th>Visitor</th>
+                                {% comment %} <th>Company Name</th> {% endcomment %}
                                 <th>Appointment Date/Time</th>
                                 <th>Description</th>
-                                <th>Room Name</th>
-                                <th>Password</th>
+                                {% comment %} <th>Room Name</th> {% endcomment %}
+                                {% comment %} <th>Password</th> {% endcomment %}
                                 <th>Complete/Incomplete</th>
                                 <th>Details</th>
                             </tr>
@@ -224,20 +224,20 @@
                                 <tr>
                                     <td>{{ a.0 }}</td>
                                     <td>{{ a.1 }} {{ a.2 }}</td>
-                                    <td>{{ a.3 }}</td>
-                                    <td>{{ a.4 }} / {{ a.5 }} </td>
-                                    <td>{{ a.6 }}</td>
-                                    <td>{{ a.7 }}</td>
-                                    <td>{{ a.10 }}</td>
-                                    {% if a.9 is True %}
-                                        <td style="background-color: lightgreen; font-weight: bold">
+                                    <td>{{ a.3 }} / {{a.4}} </td>
+                                    <td>{{ a.5 }} </td>
+                                    {% comment %} <td>{{ a.6 }}</td> {% endcomment %}
+                                    {% comment %} <td>{{ a.7 }}</td> {% endcomment %}
+                                    {% comment %} <td>{{ a.10 }}</td> {% endcomment %}
+                                    {% if a.6 is True %}
+                                        <td style="background-color: lightgreen; font-weight: bold;">
                                             Completed
                                         </td>
-                                    {% elif  a.9 is False %}
+                                    {% elif  a.6 is False %}
                                         <td style="background-color: lightyellow">Incomplete</td>
                                     {% endif %}
                                     <td class="text-center"><a class="btn btn-outline-primary"
-                                                               href="{% url 'view_app_details_eng.html' a.0 %}">Details</a>
+                                                               href="{% url 'manager_appointment_details' a.0 %}">Details</a>
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -1,0 +1,338 @@
+{% extends 'adminTemp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <a href="{% url 'dl_report_adm_action' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Appointments
+                                </div>
+                                <div class="text-xs text-secondary text-uppercase mb-1">(Pending
+                                    Approval: {{ pending_app_total }})
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ app_total }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-danger text-uppercase mb-1">
+                                    Total Admins
+                                </div>
+                                <div class="text-xs text-secondary text-uppercase mb-1">(Pending
+                                    Approval: {{ pending_adm_total }})
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ adm_total }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-user-tie fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-success text-uppercase mb-1">
+                                    Total Visitors
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ cust_total }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-user-tie fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-l font-weight-bold text-warning text-uppercase mb-1">
+                                    Total Managers
+                                </div>
+                                <div class="text-xs text-secondary text-uppercase mb-1">(Pending
+                                    Approval: {{ pending_eng_total }})
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ eng_total }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-screwdriver-wrench fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            {% comment %}
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Tasks
+                                    </div>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="progress progress-sm mr-2">
+                                                <div class="progress-bar bg-info" role="progressbar"
+                                                     style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                     aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>{% endcomment %}
+
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Content Column: Recent Appointments -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Appointments</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Visitor</th>
+                                    <th>Company Name</th>
+                                    <th>Manager</th>
+                                    <th>Role</th>
+                                    <th>Appointment Date/Time</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for a in app reversed%}
+                                    <tr>
+                                        <td>{{ a.id }}</td>
+                                        <td>{{ a.visitor.first_name }} {{ a.visitor.last_name }}</td>
+                                        <td>{{ a.visitor.address }}</td>
+                                        <td>{{ a.manager.first_name }} {{ a.manager.last_name }}</td>
+                                        <td>{{ a.manager.role }}</td>
+                                        <td>{{ a.appointment_date }} / {{ a.appointment_time }} </td>
+                                        <td>{{ a.description }}</td>
+                                        {% if a.status is True %}
+                                            <td style="background-color: lightgreen; font-weight: bold">
+                                                Approved
+                                            </td>
+                                        {% elif a.status is False %}
+                                            <td style="background-color: lightyellow">Pending</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <div class="text-end">
+                                <a class="btn btn-outline-primary"
+                                   href="{% url 'appointment_admin' %}">
+                                    View More Appointments</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Column: Recent Admins -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Admins</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Admin</th>
+                                    <th>Approval</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for a in adm_det reversed%}
+                                    <tr>
+                                        <td>{{ a.id }}</td>
+                                        <td>{{ a.first_name }} {{ a.last_name }}</td>
+                                        {% if a.status is True %}
+                                            <td style="background-color: lightgreen; font-weight: bold">
+                                                Approved
+                                            </td>
+                                        {% elif a.status is False %}
+                                            <td style="background-color: lightyellow">Pending</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-end">
+                            <a class="btn btn-outline-primary"
+                               href="{% url '' %}">
+                                View More Admins</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Content Column: Recent Visitors -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Visitors</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Visitor</th>
+                                    <th>Address</th>
+                                    <th>Approval</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for a in cust reversed%}
+                                    <tr>
+                                        <td>{{ a.id }}</td>
+                                        <td>{{ a.first_name }} {{ a.last_name }}</td>
+                                        <td>{{ a.address }}</td>
+                                        {% if a.status is True %}
+                                            <td style="background-color: lightgreen; font-weight: bold">
+                                                Approved
+                                            </td>
+                                        {% elif a.status is False %}
+                                            <td style="background-color: lightyellow">Pending</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-end">
+                            <a class="btn btn-outline-primary"
+                               href="{% url '' %}">
+                                View More Visitors</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Content Column: Recent Managers -->
+            <div class="col-lg-12 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Managers</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Manager</th>
+                                    <th>Role</th>
+                                    <th>Approval</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for a in eng reversed %}
+                                    <tr>
+                                        <td>{{ a.id }}</td>
+                                        <td>{{ a.first_name }} {{ a.last_name }}</td>
+                                        <td>{{ a.service_field }}</td>
+                                        {% if a.status is True %}
+                                            <td style="background-color: lightgreen; font-weight: bold">
+                                                Approved
+                                            </td>
+                                        {% elif a.status is False %}
+                                            <td style="background-color: lightyellow">Pending</td>
+                                        {% endif %}
+                                        {% comment %}
+                                            <td class="text-center"><a class="btn btn-outline-primary"
+                                                                       href="{% url 'view_app_details_eng.html' a.0 %}">Details</a>
+                                            </td>{% endcomment %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-end">
+                            <a class="btn btn-outline-primary"
+                               href="{% url '' %}">
+                                View More Managers</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

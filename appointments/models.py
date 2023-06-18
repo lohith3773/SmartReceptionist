@@ -5,7 +5,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from FaceRecognition.models import Visitor, Manager
 
-
+subject_choices = [
+        ('APPOINTMENT', 'Appointment'),
+        ('FEEDBACK', 'Feedback'),
+        ('NEW_FEATURE', 'Feature Request'),
+        ('BUG', 'Bug'),
+        ('OTHER', 'Other'),
+    ]
 
 class Appointment(models.Model):  
     visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE, related_name="VisitorApp")  
@@ -41,3 +47,23 @@ class ApprovedVisitorAppointment(models.Model):
     
     class Meta:
         unique_together = ('visitor', 'manager', 'approval_date')
+        
+class Admin(models.Model):  # Admin details
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Admin")  # user foreign key
+    first_name = models.CharField(max_length=100, default='first_name')  # admin first name
+    last_name = models.CharField(max_length=100, default='last_name')  # admin lastname
+    dob = models.DateField(default=datetime.date.today)  # date of birth
+    address = models.CharField(max_length=300, default="address")  # admin address
+    city = models.CharField(max_length=100, default="city")  # admin city
+    country = models.CharField(max_length=100, default="country")  # admin country
+    postcode = models.IntegerField(default=0)  # admin postcode
+    status = models.BooleanField(default=False)  # admin status (approved/on-hold)
+
+    def __str__(self):
+        return f'{self.admin.username} Admin Profile'
+
+class Feedback(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    subject = models.CharField(max_length=50,choices=subject_choices,default="Appointment")
+    message = models.CharField(max_length=255)

@@ -26,15 +26,13 @@ BASE_DIR = str(settings.BASE_DIR)
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('index')
-    passwordd = 'ww@123321'
     recognized_user = recognize_face() # call the recognize_face function
-    # check if user is authenticated
+    # check if user is authenticated5ttyt6
     if recognized_user is not None:
         print(recognized_user)
         if(recognized_user == "lohi"):
             recognized_user = "Lohhhhhhhhhh"
-        user = authenticate(request, username=recognized_user, password = passwordd)
-        print(user)
+        user = User.objects.get(username = recognized_user)
         if user is not None:
             login(request, user)
             return redirect('index')
@@ -51,6 +49,7 @@ def register_visitor_view(request):
         registration_form = VisitorRegistrationForm(request.POST, request.FILES)
 
         if registration_form.is_valid():
+            print('working')
             dob = registration_form.cleaned_data.get('dob')  # ger date of birth from form
             if dob < timezone.now().date():  # check if date is valid
                 new_user = User.objects.create_user(username=registration_form.cleaned_data.get('username'),
@@ -118,7 +117,7 @@ def register_manager_view(request):  # Register manager
                 return redirect('profile_manager')
             else:  # if date of birth is invalid
                 registration_form.add_error('dob', 'Invalid date of birth.')
-                return render(request, 'appointments/manager/register_mgr.html',
+                return render(request, 'manager/register_mgr.html',
                               {'registration_form': registration_form})
         else:
             print(registration_form.errors)

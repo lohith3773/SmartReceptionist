@@ -8,14 +8,440 @@ from django.contrib.auth.models import User, Group
 from FaceRecognition.forms import VisitorRegistrationForm, VisitorUpdateForm, ManagerRegistrationForm, ManagerUpdateForm, FeedbackForm
 from django.utils import timezone
 from FaceRecognition.models import Visitor,Manager, ManagerAppointments
-from appointments.models import Appointment, ApprovedVisitorAppointment
+from appointments.models import Appointment, ApprovedVisitorAppointment,Admin, Feedback
 from django.contrib import messages
 import datetime
 from django.core.mail import send_mail, mail_admins
-from appointments.forms import VisitorAppointmentForm, ManagerAppointmentForm
+from appointments.forms import VisitorAppointmentForm, ManagerAppointmentForm, AdminRegistrationForm, AdminAppointmentForm, AdminUpdateForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+#ADMIN
+
+def register_adm_view(request):  # register admin
+    if request.method == "POST":
+        registration_form = AdminRegistrationForm(request.POST, request.FILES)
+        if registration_form.is_valid():  # get data from form (if it is valid)
+            dob = registration_form.cleaned_data.get('dob')  # get date of birth from form
+            today = date.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))  # calculate age from dob
+            if dob < timezone.now().date():  # check if date of birth is valid (happened the previous day or even back)
+                new_user = User.objects.create_user(username=registration_form.cleaned_data.get('username'),
+                                                    email=registration_form.cleaned_data.get('email'),
+                                                    password=registration_form.cleaned_data.get(
+                                                        'password1'))  # create user
+                adm = Admin(admin=new_user,
+                            first_name=registration_form.cleaned_data.get('first_name'),
+                            last_name=registration_form.cleaned_data.get('last_name'),
+                            # age=form.cleaned_data.get('age'),
+                            dob=registration_form.cleaned_data.get('dob'),
+                            address=registration_form.cleaned_data.get('address'),
+                            city=registration_form.cleaned_data.get('city'),
+                            country=registration_form.cleaned_data.get('country'),
+                            postcode=registration_form.cleaned_data.get('postcode'),
+                            )  # create admin
+                adm.save()
+                admgroup = Group.objects.get(name = 'Admin')
+                new_user.groups.add(admgroup)
+
+                messages.add_message(request, messages.INFO, 'Registration successful!')
+                return redirect('login_admin')
+            else:
+                registration_form.add_error('dob', 'Invalid date of birth.')
+        else:
+            print(registration_form.errors)
+            return render(request, 'adminTemp/register_adm.html', {'registration_form': registration_form})
+    else:
+        registration_form = AdminRegistrationForm()
+
+    return render(request, 'adminTemp/register_adm.html', {'registration_form': registration_form})
+
+def login_adm_view(request):  # login admin
+    if request.method == "POST":
+        login_form = AuthenticationForm(request=request, data=request.POST)
+        if login_form.is_valid():
+            username = login_form.cleaned_data.get('username')  # get username
+            password = login_form.cleaned_data.get('password')  # get password
+            user = auth.authenticate(username=username, password=password)  # authenticate user
+            if user is not None and check_admin(user):  # if user exists and is admin
+                
+                auth.login(request, user)  # login user
+                account_approval = Admin.objects.all().filter(status=True,
+                                                              admin_id=request.user.id)  # if account is approved
+                if account_approval:
+                    return redirect('admin_profile')
+                    # return redirect('dashboard_adm.html')
+                else:  # if account is not yet approved
+                    auth.logout(request)
+                    messages.add_message(request, messages.INFO, 'Your account is currently pending. '
+                                                                 'Please wait for approval.')
+                    return render(request, 'adminTemp/login_adm.html', {'login_form': login_form})
+        return render(request, 'adminTemp/login_adm.html', {'login_form': login_form})
+    else:
+        login_form = AuthenticationForm()
+
+    return render(request, 'adminTemp/login_adm.html', {'login_form': login_form})
+
+@login_required(login_url='login_admin')
+def dashboard_adm_view(request):
+    if check_admin(request.user):
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        adm_det = Admin.objects.all().filter(status=False)
+        eng = Manager.objects.all().filter(status=False)  # get all on-hold engineers
+        app = Appointment.objects.all().filter(status=False)  # get all on-hold appointments
+        cust = Visitor.objects.all()
+        
+        adm_total = Admin.objects.all().count()  # total customers
+        cust_total = Visitor.objects.all().count()  # total customers
+        eng_total = Manager.objects.all().count()  # get total engineers
+        app_total = Appointment.objects.all().count()  # get total appointments
+
+        pending_adm_total = Admin.objects.all().filter(status=False).count()  # count onhold admins
+        pending_eng_total = Manager.objects.all().filter(status=False).count()  # get total onhold engineers
+        pending_app_total = Appointment.objects.all().filter(status=False).count()  # get total onhold appointments
+
+        messages.add_message(request, messages.INFO, 'There are {0} appointments that require approval.'.format(pending_app_total))
+
+        context = {'adm': adm, 'eng': eng, 'cust':cust,'app': app, 'adm_det': adm_det,
+                   'adm_total': adm_total, 'cust_total': cust_total, 'eng_total': eng_total, 'app_total': app_total,
+                   'pending_adm_total': pending_adm_total,
+                   'pending_eng_total': pending_eng_total,
+                   'pending_app_total': pending_app_total}  # render information
+
+        return render(request, 'adminTemp/dashboard_adm.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+@login_required(login_url='login_admin')
+def profile_adm_view(request):
+    if check_admin(request.user):
+        # get information from database
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        if adm is not None:
+            dob = adm.dob
+            today = date.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            if request.method == "POST":  # profile is updated
+                admin_update_form = AdminUpdateForm(request.POST, request.FILES, instance=adm)
+                if admin_update_form.is_valid():
+                    admin_update_form.save()  # save changes in profile
+
+                    messages.add_message(request, messages.INFO, 'Profile updated successfully!')
+                    return redirect('profile_adm.html')
+            else:
+                admin_update_form = AdminUpdateForm(instance=adm)
+            context = {  # render information on webpage
+                'admin_update_form': admin_update_form,
+                'adm': adm,
+                'age': age
+            }
+            return render(request, 'adminTemp/profile_adm.html', context)
+        return render(request, 'login_admin')
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+@login_required(login_url='login_admin')
+def book_app_adm_view(request):  # book appointment
+    if check_admin(request.user):
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        if request.method == "POST":  # if form is submitted
+            app_form = AdminAppointmentForm(request.POST)
+            if app_form.is_valid():
+                eng_id = app_form.cleaned_data.get('engineer')  # get engineer id
+                cust_id = app_form.cleaned_data.get('customer')  # get customer id
+
+                eng = Manager.objects.all().filter(id=eng_id).first()  # get engineer
+                cust = Visitor.objects.all().filter(id=cust_id).first()  # get customer
+
+                if check_eng_availability(eng, app_form.cleaned_data.get('app_date'),app_form.cleaned_data.get('app_time')):  # check if appointment is available during that slot
+                    app = Appointment(engineer=eng, customer=cust,
+                                      description=app_form.cleaned_data.get('description'),
+                                      app_date=app_form.cleaned_data.get('app_date'),
+                                      app_time=app_form.cleaned_data.get('app_time'),
+                                      status=True)  # create new appointment
+                    app.save()
+                    messages.add_message(request, messages.INFO, 'Appointment created.')
+                    return redirect('book_app_admin')
+                else:  # if slot is not available, display error
+                    messages.add_message(request, messages.INFO, 'Time slot unavailable.')
+                    return render(request, 'adminTemp/book_app_adm.html', {'app_form': app_form})
+            else:
+                messages.add_message(request, messages.INFO, 'Error creating an appointment. Please try again.')
+                print(app_form.errors)
+        else:
+            app_form = AdminAppointmentForm()
+        return render(request, 'adminTemp/book_app_adm.html',
+                      {'adm': adm, 'app_form': app_form})
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+def dl_report_adm_action(request):
+    template_path = 'adminTemp/summary_report.html'
+
+    adm = Admin.objects.filter(admin_id=request.user.id).first()
+    adm_det = Admin.objects.all().filter(status=False)
+    eng = Manager.objects.all().filter(status=False)  # get all on-hold engineers
+    app = Appointment.objects.all().filter(status=False)  # get all on-hold appointments
+
+    adm_total = Admin.objects.all().count()  # total customers
+    cust_total = Visitor.objects.all().count()  # total customers
+    eng_total = Manager.objects.all().count()  # get total engineers
+    app_total = Appointment.objects.all().count()  # get total appointments
+
+    pending_adm_total = Admin.objects.all().filter(status=False).count()  # count onhold admins
+    pending_eng_total = Manager.objects.all().filter(status=False).count()  # get total onhold engineers
+    pending_app_total = Appointment.objects.all().filter(status=False).count()  # get total onhold appointments
+
+    context = {'adm': adm, 'eng': eng,'app': app, 'adm_det': adm_det,
+               'adm_total': adm_total, 'cust_total': cust_total, 'eng_total': eng_total, 'app_total': app_total,
+               'pending_adm_total': pending_adm_total,
+               'pending_eng_total': pending_eng_total,
+               'pending_app_total': pending_app_total}
+
+    # context = {'myvar': 'this is your template context'}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Smart Receptionist-summary-report.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    # if error then show some funy view
+    # if pisa_status.err:
+    #     return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+@login_required(login_url='login_admin')
+def approve_app_adm_action(request, pk):
+    if check_admin(request.user):
+        # get information from database
+        appointment = Appointment.objects.get(id=pk)
+        appointment.status = True  # approve appointment
+        appointment.save()
+
+        messages.success(request, "Appointment approved successfully.")
+        return redirect(reverse('view_all_app_admin'))
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+# Admin appointment view
+@login_required(login_url='login_admin')
+def appointment_adm_view(request):
+    if check_admin(request.user):
+        # get information from database and render in html webpage
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        app = Appointment.objects.all().filter(status=False)
+        appointment_app = Appointment.objects.all().filter(status=False).count()
+        app_count = Appointment.objects.all().count()
+        pending_app_total = Appointment.objects.all().filter(status=False).count()
+        approved_app_total = Appointment.objects.all().filter(status=True).count()
+        context = {'adm': adm, 'app': app, 'appointment_app': appointment_app, 'app_count': app_count,
+                   'pending_app_total': pending_app_total, 'approved_app_total': approved_app_total}
+        return render(request, 'adminTemp/appointment_adm.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+# All appointments: pending, incomplete, completed
+@login_required(login_url='login_admin')
+def all_app_adm_view(request):
+    if check_admin(request.user):
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        app = Appointment.objects.all().filter(status=False)
+        appointment_app = Appointment.objects.all().filter(status=False).count()
+        app_count = Appointment.objects.all().count()
+        pending_app_total = Appointment.objects.all().filter(status=False).count()
+        approved_app_total = Appointment.objects.all().filter(status=True).count()
+
+        appointment_details = []
+        for app in Appointment.objects.filter(status=True).all():  # get approved appointments
+            e = app.manager
+            c = app.visitor
+            if e and c:
+                appointment_details.append([e.first_name, e.last_name, e.role,
+                                            c.first_name, c.last_name, 
+                                            app.description, app.appointment_date, app.appointment_time,
+                                            app.pk, app.completed, app.status])  # render information
+
+        pending_appointment_details = []
+        for app in Appointment.objects.filter(status=False).all():  # get pending appointments
+            e = app.manager
+            c = app.visitor
+            if e and c:
+                pending_appointment_details.append([e.first_name, e.last_name, e.role,
+                                                    c.first_name, c.last_name, 
+                                                    app.description, app.appointment_date, app.appointment_time,
+                                                    app.pk, app.completed, app.status])  # render information on webpage
+
+        return render(request, 'adminTemp/view_all_app_adm.html',
+                      {'adm': adm, 'app': app, 'appointment_app': appointment_app, 'app_count': app_count,
+                       'pending_app_total': pending_app_total, 'approved_app_total': approved_app_total,
+                       'appointment_details': appointment_details,
+                       'pending_appointment_details': pending_appointment_details})
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+# Approved appointment's details
+@login_required(login_url='login_admin')
+def app_details_adm_view(request, pk):
+    if check_admin(request.user):
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        app = Appointment.objects.filter(id=pk).first()  # get appointment
+        if app is not None:
+            eng = app.manager
+            cust = app.visitor
 
 
+            appointment_details = [eng.first_name, eng.last_name,
+                                cust.first_name, cust.last_name,
+                                cust.postcode, cust.city, cust.country,
+                                app.appointment_date, app.appointment_time, app.description,
+                                app.status, app.completed, pk]  # render fields
+
+            return render(request, 'adminTemp/view_app_details_adm.html',
+                        {'adm': adm,
+                        'eng': eng,
+                        'app': app,
+                        'cust': cust,
+                        'appointment_details': appointment_details})
+        return render(request, 'appointment_admin')
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+@login_required(login_url='login_admin')
+def complete_app_adm_action(request, pk):
+    if check_admin(request.user):
+        # get information from database and render in html webpage
+        app = Appointment.objects.get(id=pk)
+        app.completed = True
+        app.save()
+
+        messages.add_message(request, messages.INFO, 'Appointment completed successfully!')
+        return redirect('view_all_app_admin')
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+
+# Visitor section
+@login_required(login_url='login_admin')
+def visitor_adm_view(request):
+    if check_admin(request.user):
+        # get information from database and render in html webpage
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        cust = Visitor.objects.all()
+        cust_count = Visitor.objects.all().count()
+        context = {'adm': adm, 'cust': cust,
+                   'cust_count': cust_count}
+        return render(request, 'adminTemp/visitor_adm.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+#Feedback section
+def feedback_adm_view(request):
+    if check_admin(request.user):
+        # get information from database and render in html webpage
+        feedback = Feedback.objects.all()
+        feedback_count = Visitor.objects.all().count()
+        context = {'cust': feedback,
+                   'cust_count': feedback_count}
+        return render(request, 'adminTemp/feedbacks.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+# Manager section
+@login_required(login_url='login_admin')
+def manager_adm_view(request):  # view engineers
+    if check_admin(request.user):
+        # get information from database and render in html webpage
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        eng = Manager.objects.all().filter(status=False)
+        eng_approved = Manager.objects.all().filter(status=True).count()
+        eng_pending = Manager.objects.all().filter(status=False).count()
+        eng_count = Manager.objects.all().count()
+        context = {'adm': adm, 'eng': eng, 'eng_approved': eng_approved, 'eng_pending': eng_pending,
+                   'eng_count': eng_count}
+        return render(request, 'adminTemp/manager_adm.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+
+# Approve engineer account
+@login_required(login_url='login_admin')
+def approve_mgr_adm_view(request):
+    if check_admin(request.user):
+        # get information from database and render in html webpage
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        eng = Manager.objects.all().filter(status=False)
+        eng_approved = Manager.objects.all().filter(status=True).count()
+        eng_pending = Manager.objects.all().filter(status=False).count()
+        eng_count = Manager.objects.all().count()
+        context = {'adm': adm, 'eng': eng, 'eng_approved': eng_approved, 'eng_pending': eng_pending,
+                   'eng_count': eng_count}
+        return render(request, 'adminTemp/approve_mgr.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+
+# Approve engineer action
+@login_required(login_url='login_admin')
+def approve_mgr_adm_action(request, pk):
+    if check_admin(request.user):
+        # get information from database
+        eng = Manager.objects.get(id=pk)
+        eng.status = True  # approve engineer
+        eng.save()
+
+        messages.add_message(request, messages.INFO, 'Engineer approved successfully.')
+        return redirect(reverse('approve_manager'))
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+
+# View all engineers
+@login_required(login_url='login_admin')
+def all_mgr_adm_view(request):
+    # get information from database and render in html webpage
+    if check_admin(request.user):
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        eng = Manager.objects.all().filter(status=False)
+        eng_approved = Manager.objects.all().filter(status=True).count()
+        eng_pending = Manager.objects.all().filter(status=False).count()
+        eng_count = Manager.objects.all().count()
+
+        eng_details = []
+        for e in Manager.objects.filter(status=True).all():
+            eng_details.append(
+                [e.pk, e.image.url, e.first_name, e.last_name, e.dob, e.address, e.postcode, e.city, e.country,
+                 e.role, e.status])
+
+        context = {'adm': adm, 'eng': eng, 'eng_approved': eng_approved, 'eng_pending': eng_pending,
+                   'eng_count': eng_count, 'eng_details': eng_details}
+
+        return render(request, 'adminTemp/view_all_mgr.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+
+#VISITOR
 def profile_visitor_view(request):
     
     if check_visitor(request.user):
@@ -329,15 +755,12 @@ def feedback_visitor_view(request):
                 name = feedback_form.cleaned_data['Name']  # get name from form
                 subject = "You have a new Feedback from {}:<{}>".format(name, feedback_form.cleaned_data[
                     'Email'])  # get subject from form
+                subject_choice = feedback_form.cleaned_data['Subject']  # get message from form
+                
                 message = feedback_form.cleaned_data['Message']  # get message from form
 
-                message = "Subject: {}\n" \
-                          "Date: {}\n" \
-                          "Message:\n\n {}" \
-                    .format(dict(feedback_form.subject_choices).get(feedback_form.cleaned_data['Subject']),
-                            datetime.datetime.now(),
-                            feedback_form.cleaned_data['Message'])
-
+                fdb = Feedback(email = email,name=name, subject = subject_choice,message = message) 
+                fdb.save()
                 try:
                     mail_admins(subject, message)
                     messages.add_message(request, messages.INFO, 'Thank you for submitting your feedback.')
@@ -532,7 +955,7 @@ def app_details_mgr_view(request, pk):
         return redirect('manager_appointments')
     else:
         auth.logout(request)
-        return redirect('login_adm.html')
+        return redirect('login_admin')
 
 def complete_app_eng_action(request, pk):
     if check_manager(request.user):
@@ -727,8 +1150,9 @@ def completed_app_managers_view(request):
 
 
 
-
-
+# User check
+def check_admin(user):  # check if user is admin
+    return user.groups.filter(name='Admin').exists()
 
 def check_visitor(user):  # check if user is visitor
     return user.groups.filter(name='Visitor').exists()
@@ -781,6 +1205,9 @@ def contact_us(request):
     
     if check_manager(request.user):    
         return render(request, 'visitor/contact.html', {'log_user':'manager'})
+    if check_admin(request.user):    
+        return render(request, 'visitor/contact.html', {'log_user':'admin'})
+    
     return redirect('/')
 
 def index(request):

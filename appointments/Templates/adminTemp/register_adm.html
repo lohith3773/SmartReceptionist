@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block page-title %}Smart Receptionist | Visitor Sign Up{% endblock %}</title>
+    <title>{% block page-title %}Smart Receptionist | Admin Sign Up{% endblock %}</title>
 
     <!-- Website icon -->
     <link rel="icon" href="{% static 'assets/img/svg/trisome-logo.svg' %}">
@@ -57,7 +57,7 @@
 <header>
     <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'index' %}">
+            <a class="navbar-brand" href="{% url 'login_admin' %}">
                 <img src="{% static 'assets/img/svg/trisome-logo.svg' %}" alt="Smart Receptionist logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
@@ -77,7 +77,7 @@
                     </li>
                 </ul>
                 <div class="text-end">
-                    <a href="{% url 'login' %}">
+                    <a href="{% url 'login_admin' %}">
                         <button type="button" class="btn btn-primary">Login/Sign Up</button>
                     </a>
                 </div>
@@ -97,12 +97,12 @@
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
-                        {% comment %}                        <img class="col-lg-6 d-none d-lg-block bg-login"
+{% comment %}                        <img class="col-lg-6 d-none d-lg-block bg-login"
                              src="{% static 'assets/img/svg/admin-working-2.svg' %}" alt="" style="padding-left: 10px">{% endcomment %}
                         <div class="col-lg-12">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-primary mb-4 fw-bold">Sign Up an Manager Account</h1>
+                                    <h1 class="h4 text-primary mb-4 fw-bold">Sign Up an Admin Account</h1>
                                 </div>
                                 <form class="user" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
@@ -132,12 +132,7 @@
                                         {{ registration_form.dob.errors }}
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-dob">Enter your role</label>
-                                        {{ registration_form.role|add_class:"form-control" }}
-                                        {{ registration_form.service_field.errors }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-dob">Address</label>
+                                        <label class="form-control-label" for="input-address">Address</label>
                                         {{ registration_form.address|add_class:"form-control" }}
                                         {{ registration_form.address.errors }}
                                     </div>
@@ -183,7 +178,7 @@
                                 </form>
                                 <hr>
                                 <div class="text-center">
-                                    <a class="small" href="{% url 'login' %}">Have an account? Login</a>
+                                    <a class="small" href="{% url 'login_admin' %}">Have an account? Login</a>
                                 </div>
                             </div>
                         </div>

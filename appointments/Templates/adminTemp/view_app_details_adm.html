@@ -1,0 +1,289 @@
+{% extends 'adminTemp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="container-fluid">
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <!-- End Messages -->
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Appointment #{{ app.id }} Details</h1>
+
+            {% if appointment_details.11 is False %}
+                <div class="text-center"><a class="btn btn-success"
+                                            href="{% url 'complete_app_adm_action' app.id %}">
+                    <i class="fa-regular fa-circle-check"></i> Complete This Appointment</a></div>
+            {% endif %}
+
+        </div>
+
+        <!-- Appointment details -->
+        <div class="row">
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-primary text-uppercase mb-1 text-center">
+                                    Appointment ID
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {{ app.id }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-primary text-uppercase mb-1 text-center">
+                                    Appointment Status
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {% if appointment_details.10 is True %}
+                                        Approved
+                                    {% elif appointment_details.10 is False %}
+                                        Pending
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-check-double fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Annual) Card Example -->
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-primary text-uppercase mb-1 text-center">
+                                    Appointment Completion  
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {% if appointment_details.11 is True %}
+                                        Completed
+                                    {% elif appointment_details.11 is False %}
+                                        Incomplete
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fa-solid fa-circle-check fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-success text-uppercase mb-1 text-center">
+                                    Appointment Date
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {{ appointment_details.7 }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-calendar-days fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-success text-uppercase mb-1 text-center">
+                                    Appointment Time
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {{ appointment_details.8 }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clock fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-success text-uppercase mb-1 text-center">
+                                    Room Name
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {{ appointment_details.12 }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-video fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-success text-uppercase mb-1 text-center">
+                                    Room Password
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {{ appointment_details.0 }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-key fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Appointment details -->
+        <div class="row">
+
+            <div class="col-xl-12 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-warning text-uppercase mb-1 text-center">
+                                    Appointment Details
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    {{ appointment_details.9 }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-info fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Content Row: Completed Appointments -->
+        <div class="row">
+            <!-- Content Column: Upcoming Appointments -->
+            <div class="col-lg-6 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Visitor Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Visitor Name</th>
+                                    <th>Company Name</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td>{{ cust.id }}</td>
+                                    <td>{{ appointment_details.3 }} {{ appointment_details.4 }}</td>
+                                    <td>{{ appointment_details.5 }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Engineer Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Engineer Name</th>
+                                    <th>Service Field</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td>{{ eng.id }}</td>
+                                    <td>{{ appointment_details.0 }} {{ appointment_details.1 }}</td>
+                                    <td>{{ appointment_details.2 }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center"><a class="btn btn-primary"
+                                    href="{% url 'view_all_app_admin' %}">Back to View Appointments</a>
+        </div>
+
+        <div id="divider-space-50"></div>
+
+
+    </div>
+{% endblock %}
