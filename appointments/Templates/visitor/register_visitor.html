@@ -20,7 +20,7 @@
       <div class="d-flex align-items-center justify-content-center w-100" style="margin: 2vw 0">
         <div class="row justify-content-center w-100">
           <div class="col-md-4 col-lg-4 col-xxl-2" style="min-height:100%;padding-right:0;">
-            <div class="card mb-0" style="min-height:100%;background-color:#9D8ACA">
+            <div class="card mb-0" style="min-height:100%;background-color:#5D87FF">
               <div class="card-body" style="min-height:100%; display:flex; align-items:center">
                 <img src="{% static 'images/forms/registrationForm.png' %}" width="100%">
               </div>
@@ -95,7 +95,7 @@
                         {{ registration_form.password2|add_class:"form-control" }}
                         {{ registration_form.password2.errors }}
                     </div>
-                  <input type="submit" class="btn w-100 py-8 fs-4 mb-4 rounded-2" style="background-color:#9D8ACA; color:white" value="Register">
+                  <input type="submit" class="btn w-100 py-8 fs-4 mb-4 rounded-2" style="background-color:#5D87FF; color:white" value="Register">
                   <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
                     <a class="text-primary fw-bold ms-2" href="{% url 'index' %}">Sign In</a>

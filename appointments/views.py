@@ -1217,3 +1217,6 @@ def index(request):
     if check_manager(request.user):    
         return redirect('/manager/profile')
     return redirect('/')
+
+def home(request):
+    return render(request, 'index.html')

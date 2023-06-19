@@ -42,4 +42,5 @@ urlpatterns = [
     path('manager/completed-appointments', views.completed_app_managers_view, name='completed_app_manager'),  # View pending appointments
     path('manager/feedback/', views.feedback_manager_view, name='manager_feedback'),
     path('index/',views.index, name='index'),
+    path('home',views.home)
 ]

@@ -1,396 +1,470 @@
-{% extends 'visitor/base.html' %}
 {% load static %}
-{% load widget_tweaks %}
-{% block content %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Smart Receptionist </title>
-  <link rel="shortcut icon" type="image/png" href="../static/images/logos/favicon.png" />
-  <link rel="stylesheet" href="../static/css/styles.min.css" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Smart Receptionist</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 
 <body>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <!-- Sidebar Start -->
-    {% block sidebar %}
-    <aside class="left-sidebar">
-      <!-- Sidebar scroll-->
-      <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="{% url 'index' %}" class="text-nowrap logo-img">
-            <h3>Smart Receptionist</h3>
-            {% comment %} <img src="../static/images/logos/dark-logo.svg" width="180" alt="" /> {% endcomment %}
-          </a>
-          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-            <i class="ti ti-x fs-8"></i>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+      <a href="#" class="logo d-flex align-items-center">
+        <img src="{% static 'images/logo.png' %}" alt="">
+        <span>Smart Receptionist</span>
+      </a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="#about">About</a></li>
+          <li><a class="nav-link scrollto" href="#values">Values</a></li>
+          <li><a class="nav-link scrollto" href="#features">Features</a></li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          <li class="dropdown"><a href="#"><span>Control Panel</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#">Admin panel</a></li>
+              <li><a href="#">Manager panel</a></li>
+            </ul>
+          </li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <section id="hero" class="hero d-flex align-items-center">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center">
+          <h1 data-aos="fade-up">Welcome to our Smart Receptionist</h1>
+          <h2 data-aos="fade-up" data-aos-delay="400">Streamline your visitor management process with cutting-edge facial recognition technology</h2>
+          <div data-aos="fade-up" data-aos-delay="600">
+            <div class="text-center text-lg-start">
+              <a href="{% url 'login' %}" class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center">
+                <span>Check you appointments</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+            <h6 style="margin-top:2vw" data-aos="fade-up" data-aos-delay="400">New Visitor <a href="{% url 'register' %}">Register?</a></h6>
           </div>
         </div>
-        <!-- Sidebar navigation-->
-        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-          <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">Home</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'index' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-layout-dashboard"></i>
-                </span>
-                <span class="hide-menu">Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-small-cap" >
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">APPOINTMENTS</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'visitor_appointments' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-article"></i>
-                </span>
-                <span class="hide-menu">Your Meetings</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'book_appointment' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-file-description"></i>
-                </span>
-                <span class="hide-menu">Request an appointment</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'all_visitor_appointments' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-cards"></i>
-                </span>
-                <span class="hide-menu">Recent Meetings</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'all_visitor_appointments' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-article"></i>
-                </span>
-                <span class="hide-menu">Completed Meetings</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">REACH US</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'visitor_feedback' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-login"></i>
-                </span>
-                <span class="hide-menu">Feedback</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/index" aria-expanded="false">
-                <span>
-                  <i class="ti ti-user-plus"></i>
-                </span>
-                <span class="hide-menu">Contact</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">EXTRA</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/index" aria-expanded="false">
-                <span>
-                  <i class="ti ti-mood-happy"></i>
-                </span>
-                <span class="hide-menu">About</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/index" aria-expanded="false">
-                <span>
-                  <i class="ti ti-aperture"></i>
-                </span>
-                <span class="hide-menu">Privacy Policy</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-        <!-- End Sidebar navigation -->
-      </div>
-      <!-- End Sidebar scroll-->
-    </aside>
-    {% endblock %}
-    <!--  Sidebar End -->
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
-      <!--  Header Start -->
-      <header class="app-header">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <ul class="navbar-nav">
-            <li class="nav-item d-block d-xl-none">
-              <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                <i class="ti ti-bell-ringing"></i>
-                <div class="notification bg-primary rounded-circle"></div>
-                <div class="nameeee"><h3>Welcome {{user.username}} </h3> </div>
-              </a>
-            </li>
-          </ul>
-          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <li class="nav-item dropdown">
-                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  <img src="../static/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                  <div class="message-body">
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-user fs-6"></i>
-                      <p class="mb-0 fs-3">My Profile</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-mail fs-6"></i>
-                      <p class="mb-0 fs-3">My Account</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p>
-                    </a>
-                    <a href="{% url 'logout' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </header>
-      <!--  Header End -->
-      <div class="container-fluid">
-        <div class="container-fluid">
-          {% if messages %}
-              {% for message in messages %}
-                  <div class="alert alert-{{ message.tags }}">
-                      {{ message }}
-                  </div>
-              {% endfor %}
-          {% endif %}
-          <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800 text-center">Your Profile</h1>
-          <div class="main-panel">
-              <div class="main-content">
-                  <!-- Header -->
-                  <div class="header">
-                      <div class="main-content">
-                          <div class="container-fluid">
-                              <div class="row">
-                                  <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
-                                      <div class="card card-profile">
-                                          <div class="row justify-content-center">
-                                              <div class="col-lg-3 order-lg-2">
-                                                  <div class="card-profile-image">
-                                                      <a href="#">
-                                                          <img src="{{ cust.image.url }}"
-                                                               class="rounded-circle" alt="">
-                                                      </a>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          <br><br><br><br>
-                                          <div class="card-body pt-0">
-                                              <div class="row">
-                                                  <div class="center">
-                                                      <div class="profile-card-subtitle">
-                                                          <div class="text-center">
-                                                              <h3 class="text-primary">
-                                                                  <b>{{ cust.first_name }} {{ cust.last_name }}</b><span
-                                                                      class="font-weight-light">, {{ age }}</span>
-                                                              </h3>
-                                                              <br>
-                                                              <i class="fa fa-map-pin"></i> <br>
-                                                              {{ cust.company_address }}, {{ cust.postcode }}
-                                                              <br>
-                                                              {{ cust.city }}, {{ cust.country }}
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-
-                                  <div class="col-xl-8 order-xl-1">
-                                      <form method="POST" enctype="multipart/form-data">
-                                          {% csrf_token %}
-                                          <div class="card">
-                                              <p>
-                                              <div class="card-body">
-                                                  <div class="pl-lg-4">
-                                                      <div class="row">
-                                                          <div class="col-lg-6">
-                                                              <div class="form-group focused">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-username">Username</label>
-                                                                  <input readonly type="text"
-                                                                         id="input-username"
-                                                                         class="form-control form-control-alternative"
-                                                                         placeholder="{{ user.username }}">
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-lg-6">
-                                                              <div class="form-group">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-email">Email
-                                                                      Address</label>
-                                                                  <input readonly type="email"
-                                                                         id="input-email"
-                                                                         class="form-control form-control-alternative"
-                                                                         placeholder="{{ user.email_address }}">
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="row">
-                                                          <div class="col-lg-6">
-                                                              <div class="form-group focused">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-first-name">First
-                                                                      Name</label>
-                                                                  {{ customer_update_form.first_name|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.first_name.errors }}
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-lg-6">
-                                                              <div class="form-group">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-last-name">Last
-                                                                      Name</label>
-                                                                  {{ customer_update_form.last_name|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.last_name.errors }}
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="row">
-                                                          <div class="col-lg-6">
-                                                              <div class="form-group focused">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-age">Age</label>
-                                                                  <input readonly type="text"
-                                                                         id="input-username"
-                                                                         class="form-control form-control-alternative"
-                                                                         placeholder="{{ age }}">
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-lg-6">
-                                                              <div class="form-group">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-date">Date of
-                                                                      Birth</label>
-                                                                  {{ customer_update_form.dob|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.dob.errors }}
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                                  <hr class="my-1">
-                                                  <br>
-                                                  <div class="pl-lg-4">
-                                                      <div class="row">
-                                                          <div class="col-md-12">
-                                                              <div class="form-group focused">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-address">Company
-                                                                      Name</label>
-                                                                  {{ customer_update_form.company_name|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.company_name.errors }}
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="row">
-                                                          <div class="col-md-12">
-                                                              <div class="form-group focused">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-address">Company
-                                                                      Address</label>
-                                                                  {{ customer_update_form.company_address|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.company_address.errors }}
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="row">
-                                                          <div class="col-lg-4">
-                                                              <div class="form-group focused">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-city">City</label>
-                                                                  {{ customer_update_form.city|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.city.errors }}
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-lg-4">
-                                                              <div class="form-group focused">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-country">Country</label>
-                                                                  {{ customer_update_form.country|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.country.errors }}
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-lg-4">
-                                                              <div class="form-group">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-postalcode">Postcode</label>
-                                                                  {{ customer_update_form.postcode|add_class:"form-control form-control-alternative" }}
-                                                                  {{ customer_update_form.postcode.errors }}
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-md-12">
-                                                              <div class="form-group">
-                                                                  <label class="text-l font-weight-bold text-primary text-uppercase mb-1"
-                                                                         for="input-image">Profile
-                                                                      Picture</label>
-                                                                  {{ customer_update_form.image|add_class:"form-control form-control-alternative" }}
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-
-                                              <div class="form-group text-center">
-                                                  <button class="btn btn-primary" type="submit">
-                                                      Update
-                                                  </button>
-                                              </div>
-                                          </div>
-                                      </form>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+        <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
+          <img src="{% static 'images/hero-img.png' %}" class="img-fluid" alt="">
+        </div>
       </div>
     </div>
-  </div>
-  <script src="../static/libs/jquery/dist/jquery.min.js"></script>
-  <script src="../static/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../static/js/sidebarmenu.js"></script>
-  <script src="../static/js/app.min.js"></script>
-  <script src="../static/libs/apexcharts/dist/apexcharts.min.js"></script>
-  <script src="../static/libs/simplebar/dist/simplebar.js"></script>
-  <script src="../static/js/dashboard.js"></script>
+
+  </section>
+
+  <main id="main">
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container" data-aos="fade-up">
+        <div class="row gx-0">
+          <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="content">
+              <h3>About Our Smart Receptionist</h3>
+              <h2>Experience seamless visitor management with Facial Recognition technology</h2>
+              <p>
+                Our Smart Receptionist leverages state-of-the-art Facial Recognition technology to provide an efficient and secure visitor registration process. With our solution, you can streamline visitor check-ins, enhance security, and create a modern and welcoming experience for everyone.
+              </p>
+              <div class="text-center text-lg-start">
+                <a href="#" class="btn-read-more d-inline-flex align-items-center justify-content-center align-self-center">
+                  <span>Read More</span>
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="200">
+            <img src="{% static 'images/about.jpg' %}" class="img-fluid" alt="">
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End About Section -->
+
+    <!-- ======= Values Section ======= -->
+    <section id="values" class="values">
+      <div class="container" data-aos="fade-up">
+        <header class="section-header">
+          <h2>Our Core Values</h2>
+          <p>Discover what drives us</p>
+        </header>
+        <div class="row">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="box">
+              <img src="{% static 'images/values-1.png' %}" class="img-fluid" alt="">
+              <h3>Innovation and Technology</h3>
+              <p>We embrace innovation and leverage cutting-edge technology to deliver advanced solutions that meet the evolving needs of our clients.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="400">
+            <div class="box">
+              <img src="{% static 'images/values-2.png'%}" class="img-fluid" alt="">
+              <h3>Security and Privacy</h3>
+              <p>We prioritize the security and privacy of our users' data, implementing robust measures to safeguard sensitive information.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="600">
+            <div class="box">
+              <img src="{% static 'images/values-3.png' %}" class="img-fluid" alt="">
+              <h3>User-Centric Approach</h3>
+              <p>We are committed to providing an exceptional user experience, placing the needs and satisfaction of our clients at the forefront.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Values Section -->
+
+    <section id="features" class="features">
+
+      <div class="container" data-aos="fade-up">
+    
+        <header class="section-header">
+          <h2>Smart Receptionist Features</h2>
+          <p>Implementing Facial Recognition for Incoming Visitors</p>
+        </header>
+    
+        <div class="row">
+    
+          <div class="col-lg-6">
+            <img src="{% static 'images/features.png' %}" class="img-fluid" alt="">
+          </div>
+    
+          <div class="col-lg-6 mt-5 mt-lg-0 d-flex">
+            <div class="row align-self-center gy-4">
+    
+              <div class="col-md-6" data-aos="zoom-out" data-aos-delay="200">
+                <div class="feature-box d-flex align-items-center">
+                  <i class="bi bi-check"></i>
+                  <h3>Efficient Visitor Management</h3>
+                </div>
+              </div>
+    
+              <div class="col-md-6" data-aos="zoom-out" data-aos-delay="300">
+                <div class="feature-box d-flex align-items-center">
+                  <i class="bi bi-check"></i>
+                  <h3>Seamless Facial Recognition</h3>
+                </div>
+              </div>
+    
+              <div class="col-md-6" data-aos="zoom-out" data-aos-delay="400">
+                <div class="feature-box d-flex align-items-center">
+                  <i class="bi bi-check"></i>
+                  <h3>Secure Access Control</h3>
+                </div>
+              </div>
+    
+              <div class="col-md-6" data-aos="zoom-out" data-aos-delay="500">
+                <div class="feature-box d-flex align-items-center">
+                  <i class="bi bi-check"></i>
+                  <h3>Real-time Notifications</h3>
+                </div>
+              </div>
+    
+              <div class="col-md-6" data-aos="zoom-out" data-aos-delay="600">
+                <div class="feature-box d-flex align-items-center">
+                  <i class="bi bi-check"></i>
+                  <h3>Visitor Data Management</h3>
+                </div>
+              </div>
+    
+              <div class="col-md-6" data-aos="zoom-out" data-aos-delay="700">
+                <div class="feature-box d-flex align-items-center">
+                  <i class="bi bi-check"></i>
+                  <h3>Customizable Settings</h3>
+                </div>
+              </div>
+    
+            </div>
+          </div>
+    
+        </div> <!-- / row -->
+    
+        <!-- Feature Tabs -->
+        <div class="row feture-tabs" data-aos="fade-up">
+          <div class="col-lg-6">
+            <h3>Streamlined Visitor Experience and Enhanced Security</h3>
+    
+            <!-- Tabs -->
+            <ul class="nav nav-pills mb-3">
+              <li>
+                <a class="nav-link active" data-bs-toggle="pill" href="#tab1">Smooth Check-in Process</a>
+              </li>
+              <li>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab2">Personalized Visitor Information</a>
+              </li>
+              <li>
+                <a class="nav-link" data-bs-toggle="pill" href="#tab3">Access Control Integration</a>
+              </li>
+            </ul><!-- End Tabs -->
+    
+            <!-- Tab Content -->
+            <div class="tab-content">
+    
+              <div class="tab-pane fade show active" id="tab1">
+                <p>Simplify the check-in process for visitors with our Smart Receptionist solution. It ensures a hassle-free experience and reduces wait times at the reception desk. Visitors can quickly check in using facial recognition technology.</p>
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-check2"></i>
+                  <h4>Efficient and Secure Check-in</h4>
+                </div>
+                <p>Our system securely captures visitor information and validates their identity using facial recognition. It provides a seamless check-in experience, saving time for both visitors and staff.</p>
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-check2"></i>
+                  <h4>Real-time Notifications</h4>
+                </div>
+                <p>Receive instant notifications when visitors arrive, allowing your team to provide timely assistance and ensure a warm welcome.</p>
+              </div><!-- End Tab 1 Content -->
+    
+              <div class="tab-pane fade show" id="tab2">
+                <p>Personalize the visitor experience by capturing and storing relevant visitor information securely. Our system enables you to gather data such as visitor preferences, purpose of visit, and more.</p>
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-check2"></i>
+                  <h4>Customized Visitor Profiles</h4>
+                </div>
+                <p>Create visitor profiles with detailed information, making it easy to provide a personalized experience during future visits.</p>
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-check2"></i>
+                  <h4>Enhanced Data Privacy</h4>
+                </div>
+                <p>We prioritize data security and ensure compliance with privacy regulations to safeguard visitor information.</p>
+              </div><!-- End Tab 2 Content -->
+    
+              <div class="tab-pane fade show" id="tab3">
+                <p>Integrate our Smart Receptionist solution with your access control system to enhance security within your organization. Seamlessly manage visitor access rights and track their movements.</p>
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-check2"></i>
+                  <h4>Access Control Integration</h4>
+                </div>
+                <p>Grant authorized visitors access to designated areas based on predefined permissions. Ensure only authorized individuals can enter restricted zones.</p>
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-check2"></i>
+                  <h4>Visitor Tracking</h4>
+                </div>
+                <p>Track visitor movements within your premises, providing you with valuable insights and improving overall security.</p>
+              </div><!-- End Tab 3 Content -->
+    
+            </div>
+    
+          </div>
+    
+          <div class="col-lg-6">
+            <img src="{% static 'images/features-2.png' %}" class="img-fluid" alt="">
+          </div>
+    
+        </div><!-- End Feature Tabs -->
+    
+        <!-- Feature Icons -->
+        <div class="row feature-icons" data-aos="fade-up">
+          <h3>Why Choose Smart Receptionist?</h3>
+    
+          <div class="row">
+    
+            <div class="col-xl-4 text-center" data-aos="fade-right" data-aos-delay="100">
+              <img src="{% static 'images/features-3.png' %}" class="img-fluid p-4" alt="">
+            </div>
+    
+            <div class="col-xl-8 d-flex content">
+              <div class="row align-self-center gy-4">
+    
+                <div class="col-md-6 icon-box" data-aos="fade-up">
+                  <i class="ri-line-chart-line"></i>
+                  <div>
+                    <h4>Enhanced Efficiency</h4>
+                    <p>Streamline the check-in process, reduce wait times, and improve overall operational efficiency.</p>
+                  </div>
+                </div>
+    
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                  <i class="ri-stack-line"></i>
+                  <div>
+                    <h4>Improved Visitor Experience</h4>
+                    <p>Provide a personalized and seamless experience for visitors, leaving a positive impression.</p>
+                  </div>
+                </div>
+    
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                  <i class="ri-brush-4-line"></i>
+                  <div>
+                    <h4>Customization Options</h4>
+                    <p>Tailor the system to your specific requirements and branding, ensuring a cohesive experience.</p>
+                  </div>
+                </div>
+    
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
+                  <i class="ri-magic-line"></i>
+                  <div>
+                    <h4>Advanced Security</h4>
+                    <p>Enhance security measures by integrating access control and tracking visitor movements.</p>
+                  </div>
+                </div>
+    
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="400">
+                  <i class="ri-command-line"></i>
+                  <div>
+                    <h4>Real-time Notifications</h4>
+                    <p>Receive instant notifications when visitors arrive, allowing for prompt assistance.</p>
+                  </div>
+                </div>
+    
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="500">
+                  <i class="ri-radar-line"></i>
+                  <div>
+                    <h4>Data Privacy</h4>
+                    <p>Ensure the security and privacy of visitor data, complying with data protection regulations.</p>
+                  </div>
+                </div>
+    
+              </div>
+            </div>
+    
+          </div>
+    
+        </div><!-- End Feature Icons -->
+    
+      </div>
+    
+    </section><!-- End Features Section -->
+    
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+
+      <div class="container" data-aos="fade-up">
+
+        <header class="section-header">
+          <h2>Contact</h2>
+          <p>Contact Us</p>
+        </header>
+
+        <div class="row gy-4">
+
+          <div class="col-lg-6">
+
+            <div class="row gy-4">
+              <div class="col-md-6">
+                <div class="info-box">
+                  <i class="bi bi-geo-alt"></i>
+                  <h3>Address</h3>
+                  <p>Electronic city<br>Bangalore, Karnataka 560057</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-box">
+                  <i class="bi bi-telephone"></i>
+                  <h3>Call Us</h3>
+                  <p>+91 9876 543 210<br>+91 7890 654 321</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-box">
+                  <i class="bi bi-envelope"></i>
+                  <h3>Email Us</h3>
+                  <p>info@example.com<br>contact@example.com</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-box">
+                  <i class="bi bi-clock"></i>
+                  <h3>Open Hours</h3>
+                  <p>Monday - Friday<br>9:00AM - 05:00PM</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-lg-6">
+            <form action="forms/contact.php" method="post" class="php-email-form">
+              <div class="row gy-4">
+
+                <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                </div>
+
+                <div class="col-md-12">
+                  <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                </div>
+
+                <div class="col-md-12">
+                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+
+                  <button type="submit">Send Message</button>
+                </div>
+
+              </div>
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+
+
+
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+
 </body>
 
 </html>
-{% endblock %}
