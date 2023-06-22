@@ -3,8 +3,8 @@ from . import views
 
 urlpatterns = [
     #Admin
-    path('register/admin', views.register_adm_view, name='register_admin'), # Visitor profile 
-    path('login/admin', views.login_adm_view, name='login_admin'), # Visitor profile 
+    path('register/admin', views.register_adm_view, name='register_admin'), # Register Admin 
+    path('login/admin', views.login_adm_view, name='login_admin'), # Login Admin
     path('dashboard/admin/', views.dashboard_adm_view, name='admin_dashboard'),  # Admin dashboard
     path('profile/admin/', views.profile_adm_view, name='admin_profile'),  # Admin profile
     #Admin - Appointments
@@ -33,6 +33,7 @@ urlpatterns = [
     path('visitor/completed-appointments', views.completed_app_visitors_view, name='visitor_completed_appointments'),  # View pending appointments
     path('contact/', views.contact_us, name='contact_us'),
     #Manager
+    path('login/manager', views.login_mgr_view, name='login_manager'), # Login Manager
     path('manager/profile', views.profile_mgr_view, name='profile_manager'),  # Manager profile
     path('manager/book-appointment', views.book_app_manager_view, name='book_app_manager'),  # Book an appointment
     path('manager/appointments', views.dashboard_mgr_view, name='manager_dashboard'),  # Manager dashboard

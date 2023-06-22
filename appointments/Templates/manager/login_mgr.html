@@ -1,8 +1,6 @@
-{% comment %} {% extends 'adminTemp/base.html' %} {% endcomment %}
 {% load widget_tweaks %}
 {% load static %}
 
-{% comment %} {% block content %} {% endcomment %}
 <!doctype html>
 <html lang="en">
 
@@ -30,7 +28,7 @@
                 </a>
                 <p class="text-center"></p>
                 <div class="text-center">
-                    <h1 class="h4 text-primary mb-4 fw-bold">Welcome Back, Admin!</h1>
+                    <h1 class="h4 text-primary mb-4 fw-bold">Welcome Back, Manager!</h1>
                 </div>
                 <!-- Messages -->
                 {% if messages %}
@@ -65,7 +63,7 @@
                     <input type="submit" value="Login" class='btn btn-primary btn-block w-100 py-8 fs-4 mb-4 rounded-2'>
                 </form>
                 <div class="d-flex align-items-center justify-content-center">
-                    <a class="text-primary fw-bold ms-2" href="{% url 'register_admin' %}">Create an admin account</a>
+                    <a class="text-primary fw-bold ms-2" href="{% url 'register_manager' %}">Create Manager account</a>
                   </div>
               </div>
             </div>

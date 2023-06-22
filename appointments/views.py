@@ -782,7 +782,7 @@ def feedback_visitor_view(request):
         return redirect('login_vis.html')
 
 #MANAGER
-
+@login_required(login_url = 'login_manager')
 def dashboard_mgr_view(request):
     if check_manager(request.user):
         adm = Manager.objects.filter(manager=request.user.id).first()
@@ -837,9 +837,30 @@ def dashboard_mgr_view(request):
         return render(request, 'manager/dashboard_mgr.html', context)
     else:
         auth.logout(request)
-        return redirect('index')
+        return redirect('login_manager')
 
+def login_mgr_view(request):  # login manager
+    if request.method == "POST":
+        login_form = AuthenticationForm(request=request, data=request.POST)
+        if login_form.is_valid():
+            username = login_form.cleaned_data.get('username')
+            password = login_form.cleaned_data.get('password')
+            user = auth.authenticate(username=username, password=password)
+            if user is not None and check_manager(user):
+                auth.login(request, user)
+                account_approval = Manager.objects.all().filter(status=True, manager=request.user.id)
+                if account_approval:
+                    return redirect('profile_manager')
+                else:
+                    messages.add_message(request, messages.INFO, 'Your account is currently pending. '
+                                                                 'Please wait for approval.')
+                    return render(request, 'manager/login_mgr.html', {'login_form': login_form})
+        return render(request, 'manager/login_mgr.html', {'login_form': login_form})
+    else:
+        login_form = AuthenticationForm()
+    return render(request, 'manager/login_mgr.html', {'login_form': login_form})
 
+@login_required(login_url = 'login_manager')
 def profile_mgr_view(request):
     if check_manager(request.user):
         # get information from database and render in html webpage
@@ -883,6 +904,7 @@ def profile_mgr_view(request):
         auth.logout(request)
         return redirect('')
 
+@login_required(login_url = 'login_manager')
 def all_app_mgr_view(request):
     if check_manager(request.user):
         # get information from database and render in html webpage
@@ -930,6 +952,7 @@ def all_app_mgr_view(request):
         auth.logout(request)
         return redirect('login_eng.html')
 
+@login_required(login_url = 'login_manager')
 def app_details_mgr_view(request, pk):
     if check_manager(request.user):
         adm = Manager.objects.filter(manager=request.user.id).first()
@@ -957,6 +980,7 @@ def app_details_mgr_view(request, pk):
         auth.logout(request)
         return redirect('login_admin')
 
+@login_required(login_url = 'login_manager')
 def complete_app_eng_action(request, pk):
     if check_manager(request.user):
         # get information from database and render in html webpage
@@ -971,6 +995,7 @@ def complete_app_eng_action(request, pk):
         return redirect('login_eng.html')
 
 
+@login_required(login_url = 'login_manager')
 def get_link_mgr_action(request, pk):
     if check_manager(request.user):
         # get information from database
@@ -990,6 +1015,7 @@ def get_link_mgr_action(request, pk):
         auth.logout(request)
         return redirect('login_eng.html')
 
+@login_required(login_url = 'login_manager')
 def approved_app_eng_view(request):
     if check_manager(request.user):
         eng = Manager.objects.get(manager=request.user.id)  # get manager
@@ -1016,6 +1042,7 @@ def approved_app_eng_view(request):
         auth.logout(request)
         return redirect('login_eng.html')
 
+@login_required(login_url = 'login_manager')
 def feedback_manager_view(request):
     if check_manager(request.user):
         eng = Manager.objects.get(manager=request.user.id)
@@ -1052,6 +1079,7 @@ def feedback_manager_view(request):
         auth.logout(request)
         return redirect('login_eng.html')
 
+@login_required(login_url = 'login_manager')
 def book_app_manager_view(request):
     if check_manager(request.user):
         vis = Manager.objects.filter(manager=request.user.id).first()
@@ -1100,6 +1128,7 @@ def book_app_manager_view(request):
         auth.logout(request)
         return redirect('login_vis.html')
 
+@login_required(login_url = 'login_manager')
 def completed_app_managers_view(request):
     if check_manager(request.user):
         # get information from database and render in html webpage
