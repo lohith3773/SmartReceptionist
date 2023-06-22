@@ -91,17 +91,17 @@ def dashboard_adm_view(request):
     if check_admin(request.user):
         adm = Admin.objects.filter(admin_id=request.user.id).first()
         adm_det = Admin.objects.all().filter(status=False)
-        eng = Manager.objects.all().filter(status=False)  # get all on-hold engineers
+        eng = Manager.objects.all().filter(status=False)  # get all on-hold managers
         app = Appointment.objects.all().filter(status=False)  # get all on-hold appointments
         cust = Visitor.objects.all()
         
-        adm_total = Admin.objects.all().count()  # total customers
-        cust_total = Visitor.objects.all().count()  # total customers
-        eng_total = Manager.objects.all().count()  # get total engineers
+        adm_total = Admin.objects.all().count()  # total visitors
+        cust_total = Visitor.objects.all().count()  # total visitors
+        eng_total = Manager.objects.all().count()  # get total managers
         app_total = Appointment.objects.all().count()  # get total appointments
 
         pending_adm_total = Admin.objects.all().filter(status=False).count()  # count onhold admins
-        pending_eng_total = Manager.objects.all().filter(status=False).count()  # get total onhold engineers
+        pending_eng_total = Manager.objects.all().filter(status=False).count()  # get total onhold managers
         pending_app_total = Appointment.objects.all().filter(status=False).count()  # get total onhold appointments
 
         messages.add_message(request, messages.INFO, 'There are {0} appointments that require approval.'.format(pending_app_total))
@@ -153,14 +153,14 @@ def book_app_adm_view(request):  # book appointment
         if request.method == "POST":  # if form is submitted
             app_form = AdminAppointmentForm(request.POST)
             if app_form.is_valid():
-                eng_id = app_form.cleaned_data.get('engineer')  # get engineer id
-                cust_id = app_form.cleaned_data.get('customer')  # get customer id
+                eng_id = app_form.cleaned_data.get('manager')  # get manager id
+                cust_id = app_form.cleaned_data.get('visitor')  # get visitor id
 
-                eng = Manager.objects.all().filter(id=eng_id).first()  # get engineer
-                cust = Visitor.objects.all().filter(id=cust_id).first()  # get customer
+                eng = Manager.objects.all().filter(id=eng_id).first()  # get manager
+                cust = Visitor.objects.all().filter(id=cust_id).first()  # get visitor
 
                 if check_eng_availability(eng, app_form.cleaned_data.get('app_date'),app_form.cleaned_data.get('app_time')):  # check if appointment is available during that slot
-                    app = Appointment(engineer=eng, customer=cust,
+                    app = Appointment(manager=eng, visitor=cust,
                                       description=app_form.cleaned_data.get('description'),
                                       app_date=app_form.cleaned_data.get('app_date'),
                                       app_time=app_form.cleaned_data.get('app_time'),
@@ -187,16 +187,16 @@ def dl_report_adm_action(request):
 
     adm = Admin.objects.filter(admin_id=request.user.id).first()
     adm_det = Admin.objects.all().filter(status=False)
-    eng = Manager.objects.all().filter(status=False)  # get all on-hold engineers
+    eng = Manager.objects.all().filter(status=False)  # get all on-hold managers
     app = Appointment.objects.all().filter(status=False)  # get all on-hold appointments
 
-    adm_total = Admin.objects.all().count()  # total customers
-    cust_total = Visitor.objects.all().count()  # total customers
-    eng_total = Manager.objects.all().count()  # get total engineers
+    adm_total = Admin.objects.all().count()  # total visitors
+    cust_total = Visitor.objects.all().count()  # total visitors
+    eng_total = Manager.objects.all().count()  # get total managers
     app_total = Appointment.objects.all().count()  # get total appointments
 
     pending_adm_total = Admin.objects.all().filter(status=False).count()  # count onhold admins
-    pending_eng_total = Manager.objects.all().filter(status=False).count()  # get total onhold engineers
+    pending_eng_total = Manager.objects.all().filter(status=False).count()  # get total onhold managers
     pending_app_total = Appointment.objects.all().filter(status=False).count()  # get total onhold appointments
 
     context = {'adm': adm, 'eng': eng,'app': app, 'adm_det': adm_det,
@@ -365,7 +365,7 @@ def feedback_adm_view(request):
 
 # Manager section
 @login_required(login_url='login_admin')
-def manager_adm_view(request):  # view engineers
+def manager_adm_view(request):  # view managers
     if check_admin(request.user):
         # get information from database and render in html webpage
         adm = Admin.objects.filter(admin_id=request.user.id).first()
@@ -381,7 +381,7 @@ def manager_adm_view(request):  # view engineers
         return redirect('login_admin')
 
 
-# Approve engineer account
+# Approve manager account
 @login_required(login_url='login_admin')
 def approve_mgr_adm_view(request):
     if check_admin(request.user):
@@ -399,23 +399,23 @@ def approve_mgr_adm_view(request):
         return redirect('login_admin')
 
 
-# Approve engineer action
+# Approve manager action
 @login_required(login_url='login_admin')
 def approve_mgr_adm_action(request, pk):
     if check_admin(request.user):
         # get information from database
         eng = Manager.objects.get(id=pk)
-        eng.status = True  # approve engineer
+        eng.status = True  # approve manager
         eng.save()
 
-        messages.add_message(request, messages.INFO, 'Engineer approved successfully.')
+        messages.add_message(request, messages.INFO, 'manager approved successfully.')
         return redirect(reverse('approve_manager'))
     else:
         auth.logout(request)
         return redirect('login_admin')
 
 
-# View all engineers
+# View all managers
 @login_required(login_url='login_admin')
 def all_mgr_adm_view(request):
     # get information from database and render in html webpage
@@ -981,7 +981,7 @@ def get_link_mgr_action(request, pk):
         eng = appointment.manager
         esf = ManagerAppointments.objects.filter(manager=eng).first()
         if esf is not None:
-            esf.app_total += 1  # add customer to engineer count
+            esf.app_total += 1  # add visitor to manager count
             esf.save()
 
         messages.add_message(request, messages.INFO, 'Appointment approved!')
@@ -992,11 +992,11 @@ def get_link_mgr_action(request, pk):
 
 def approved_app_eng_view(request):
     if check_manager(request.user):
-        eng = Manager.objects.get(engineer_id=request.user.id)  # get engineer
+        eng = Manager.objects.get(manager=request.user.id)  # get manager
 
         incomplete_appointments = []
         for aca in ApprovedVisitorAppointment.objects.filter(
-                engineer=eng).all():  # get all customers approved under this engineer
+                manager=eng).all():  # get all visitors approved under this manager
             cust = aca.visitor
             if cust and not aca.completed_date:
                 incomplete_appointments.append([eng.first_name, cust.first_name,
@@ -1004,7 +1004,7 @@ def approved_app_eng_view(request):
 
         completed_appointments = []
         for aca in ApprovedVisitorAppointment.objects.filter(
-                engineer=eng).all():  # get all customers approved under this engineer
+                manager=eng).all():  # get all visitors approved under this manager
             cust = aca.visitor
             if cust and aca.completed_date:
                 completed_appointments.append([eng.first_name, cust.first_name,
