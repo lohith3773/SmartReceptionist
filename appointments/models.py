@@ -67,3 +67,4 @@ class Feedback(models.Model):
     email = models.CharField(max_length=100)
     subject = models.CharField(max_length=50,choices=subject_choices,default="Appointment")
     message = models.CharField(max_length=255)
+    

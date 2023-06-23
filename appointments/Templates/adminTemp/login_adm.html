@@ -32,15 +32,6 @@
                 <div class="text-center">
                     <h1 class="h4 text-primary mb-4 fw-bold">Welcome Back, Admin!</h1>
                 </div>
-                <!-- Messages -->
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                <!-- End Messages -->
                 <form class="user" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">

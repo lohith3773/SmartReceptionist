@@ -20,7 +20,7 @@ from keras_vggface.vggface import VGGFace
 from keras.models import load_model
 from django.shortcuts import render, redirect
 
-
+camera = 1
 BASE_DIR = str(settings.BASE_DIR)
 
 def create_dataset(user):
@@ -29,13 +29,12 @@ def create_dataset(user):
     name = user.username
     dataset_path = os.path.join(BASE_DIR,'media','dataimages','TrainingImage')
     # Capture face images using OpenCV
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(camera)
     detector = cv2.CascadeClassifier(BASE_DIR + '/algorithms/haarcascade_frontalface_default.xml')
     sample_num = 0
     images = []
     path = os.path.join(dataset_path,name)
     os.mkdir(path)
-    stored_path = path + name
     
     while True:
         ret, img = cam.read()
@@ -138,7 +137,7 @@ def recognize_face():
         print(labels)
 
     # default webcam
-    stream = cv2.VideoCapture(0)
+    stream = cv2.VideoCapture(camera)
     verified_label = None
     verification_counter = 0
     verified_count = 0
@@ -168,7 +167,7 @@ def recognize_face():
                 img = image_array.reshape(1, image_width, image_height, 3) 
                 img = img.astype('float32')
                 img /= 255
-                threshold = 0.8
+                threshold = 0.7
                 # predict the image
                 predicted_prob = model.predict(img)
                 if predicted_prob[0].max() > threshold:
@@ -194,13 +193,13 @@ def recognize_face():
 
                 # Show the frame
                 cv2.imshow("Image", frame)
-                key = cv2.waitKey(1) & 0xFF
+                key = cv2.waitKey(camera) & 0xFF
                 if key == ord("q"):    # Press q to break out of the loop
                     break  
-                if verified_count >= 7 and verification_counter >= 10:
+                if verified_count >= 7:
                     stream.release()
-                    cv2.waitKey(1)
+                    cv2.waitKey(camera)
                     cv2.destroyAllWindows()
-                    cv2.waitKey(1)
+                    cv2.waitKey(camera)
                     return name    
 

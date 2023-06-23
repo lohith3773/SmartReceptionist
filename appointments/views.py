@@ -441,6 +441,88 @@ def all_mgr_adm_view(request):
         return redirect('login_admin')
 
 
+# View admin
+@login_required(login_url='login_admin')
+def admin_adm_view(request):
+    # get information from database and render in html webpage
+    if check_admin(request.user):
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        adm_details = Admin.objects.all().filter()
+        adm_approved = Admin.objects.all().filter(status=True).count()
+        adm_pending = Admin.objects.all().filter(status=False).count()
+        adm_count = Admin.objects.all().count()
+        context = {'adm': adm,
+                   'adm_details': adm_details,
+                   'adm_approved': adm_approved,
+                   'adm_pending': adm_pending,
+                   'adm_count': adm_count}
+        return render(request, 'adminTemp/admin_adm.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+# Approve admin account
+@login_required(login_url='login_admin')
+def approve_adm_adm_view(request):
+    if check_admin(request.user):
+        # get information from database and render in html webpage
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        adm_details = Admin.objects.all().filter(status=False)
+        adm_approved = Admin.objects.all().filter(status=True).count()
+        adm_pending = Admin.objects.all().filter(status=False).count()
+        adm_count = Admin.objects.all().count()
+        context = {'adm': adm,
+                   'adm_details': adm_details,
+                   'adm_approved': adm_approved,
+                   'adm_pending': adm_pending,
+                   'adm_count': adm_count}
+
+        return render(request, 'adminTemp/approve_adm.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+# Approve admin action
+@login_required(login_url='login_admin')
+def approve_adm_adm_action(request, pk):
+    if check_admin(request.user):
+        # get information from database
+        adm = Admin.objects.get(id=pk)
+        adm.status = True  # approve admin
+        adm.save()
+        messages.add_message(request, messages.INFO, 'Admin approved successfully.')
+        return redirect(reverse('approve_admin_action'))
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+# View all admins
+@login_required(login_url='login_admin')
+def all_adm_adm_view(request):
+    if check_admin(request.user):
+        adm = Admin.objects.filter(admin_id=request.user.id).first()
+        adm_approved = Admin.objects.all().filter(status=True).count()
+        adm_pending = Admin.objects.all().filter(status=False).count()
+        adm_count = Admin.objects.all().count()
+
+        # get information from database and render in html webpage
+        adm_details = []
+        for a in Admin.objects.all():
+            adm_details.append(
+                [a.pk, a.first_name, a.last_name, a.dob, a.address, a.city, a.country, a.postcode,
+                 a.status])
+
+        context = {'adm': adm, 'adm_approved': adm_approved,
+                   'adm_pending': adm_pending, 'adm_count': adm_count,
+                   'adm_details': adm_details}
+
+        return render(request, 'adminTemp/view_all_adm.html', context)
+    else:
+        auth.logout(request)
+        return redirect('login_admin')
+
+
+
 #VISITOR
 def profile_visitor_view(request):
     
@@ -691,7 +773,6 @@ def completed_app_visitors_view(request):
     else:
         auth.logout(request)
         return redirect('login_vis.html')
-
 
 def app_details_visitors_view(request, pk):
     if check_visitor(request.user):
@@ -1245,7 +1326,12 @@ def index(request):
         return redirect('/visitor/profile')
     if check_manager(request.user):    
         return redirect('/manager/profile')
+    if check_admin(request.user):    
+        return redirect('/profile/admin')
     return redirect('/')
 
 def home(request):
     return render(request, 'index.html')
+
+def aboutus(request):
+    return render(request,'visitor/aboutus.html')

@@ -1,0 +1,52 @@
+{% extends 'visitor/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<style>
+    .card{
+        margin:0 1vw
+    }
+</style>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-5 card">
+          <h2 class="mb-4 card-header">Project Description</h2>
+          <p class="text-justify card-body">Our project aims to develop a Smart receptionist system implementing facial recognition for managing visitors in organizations. The project utilizes state-of-the-art facial recognition technology to automate and enhance the visitor management process. It replaces the traditional manual check-in process with a contactless and efficient system, ensuring both security and convenience for organizations and visitors.</p>
+        </div>
+        <div class="col-md-5 card">
+          <h2 class="mb-4 card-header">Key Features</h2>
+          <ul class="card-body">
+            <li><b> Facial Recognition:</b> The system employs advanced facial recognition algorithms to accurately identify and verify visitors.</li>
+            <li><b> Automated Check-in Process:</b> Visitors can enjoy a streamlined check-in process without the need for manual registration, reducing waiting times.</li>
+            <li><b> Enhanced Security:</b> By verifying visitors' identities against a pre-registered database, the system enhances security and minimizes unauthorized access.</li>
+            <li><b> Customizable and Integratable:</b> The system offers customization options to adapt to specific organizational needs and can integrate with existing visitor management and access control systems.</li>
+            <li><b> Analytics and Reporting:</b> The system provides valuable insights and reporting features, allowing organizations to track visitor data and make informed decisions.</li>
+          </ul>
+        </div>
+      </div>
+  
+      <div class="row mt-5">
+        <div class="col-md-5 card">
+          <h2 class="mb-4 card-header">Our Team</h2>
+          <ul class="list-unstyled card-body">
+            <li><strong> &emsp;Lohith L </strong>  </li>
+            <li><strong> &emsp;Maruthi A </strong>  </li>
+            <li><strong> &emsp;Anirudh A </strong> </li>
+            <li><strong> &emsp;Syed Asif </strong> </li>
+            <li><strong> &emsp;Manoj Kumar </strong> </li>
+          </ul>
+        </div>
+        <div class="col-md-5 card">
+          <h2 class="mb-4 card-header">Technologies Used</h2>
+          <ul class="list-unstyled card-body">
+            <li>VGG-16 Algorithm</li>
+            <li>Web Development: HTML, CSS, JavaScript</li>
+            <li>Backend: Python, Django Framework</li>
+            <li>Database: MySQL</li>
+          </ul>
+        </div>
+      </div>
+  
+  
+</div>
+{% endblock %}

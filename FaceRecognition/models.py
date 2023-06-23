@@ -47,3 +47,6 @@ class ManagerAppointments(models.Model):
     def __str__(self):
         return f'{self.manager.first_name} appointments Information'
 
+class Analytics(models.Model):
+    visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE, related_name="VisitorAnalytics")  
+    check_in_time = models.DateTimeField(auto_now_add=True)

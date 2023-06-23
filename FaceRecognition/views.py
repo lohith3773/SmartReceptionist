@@ -12,7 +12,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User, Group
 from .forms import VisitorRegistrationForm, VisitorUpdateForm, ManagerRegistrationForm, ManagerUpdateForm, FeedbackForm
 from django.utils import timezone
-from .models import Visitor,Manager
+from .models import Visitor,Manager, Analytics
 from appointments.models import Appointment
 from django.contrib import messages
 import datetime
@@ -30,18 +30,17 @@ def login_view(request):
     # check if user is authenticated
     if recognized_user is not None:
         print(recognized_user)
-        if(recognized_user == "lohi"):
-            recognized_user = "Lohhhhhhhhhh"
         user = User.objects.get(username = recognized_user)
+        # visitor = Visitor.objects.get(visitor = user)
         if user is not None:
             login(request, user)
+            # login_time = timezone.now()
+            # analytics = Analytics(visitor = visitor, check_in_time = login_time )
+            # analytics.save()
             return redirect('index')
     
     return render(request, 'login.html')
 
-
-def dashboard(request):
-    return render(request, 'dashboard.html', {'name': request.user.username})
 
 def register_visitor_view(request):
     if request.method == 'POST':
@@ -49,7 +48,6 @@ def register_visitor_view(request):
         registration_form = VisitorRegistrationForm(request.POST, request.FILES)
 
         if registration_form.is_valid():
-            print('working')
             dob = registration_form.cleaned_data.get('dob')  # ger date of birth from form
             if dob < timezone.now().date():  # check if date is valid
                 new_user = User.objects.create_user(username=registration_form.cleaned_data.get('username'),
@@ -138,7 +136,7 @@ def trainn(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('')
+    return redirect('/')
 
 def login_new_manager(request):
     user = authenticate(request,username = 'manager3',password ='ww@123321') 
@@ -148,9 +146,14 @@ def login_new_manager(request):
     return redirect('index')
 
 def login_new_visitor(request):
-    user = authenticate(request,username = 'Lohhhhhhhhhh',password ='ww@123321') 
+    user = authenticate(request,username = 'lohi',password ='ww@123321') 
     if user is not None:
         login(request, user)
         return redirect('visitor_profile')
     return redirect('index')
     
+def addtogroup(request):
+    new_user= User.objects.get(username = 'syed')
+    mgrgroup = Group.objects.get(name = 'Visitor')
+    new_user.groups.add(mgrgroup)
+    return redirect('index')

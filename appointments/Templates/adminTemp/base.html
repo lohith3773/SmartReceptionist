@@ -104,6 +104,34 @@
                 <span class="hide-menu">Approve Managers</span>
               </a>
             </li>
+            <li class="nav-small-cap" >
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">ADMINS</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url 'admin_admin' %}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-article"></i>
+                </span>
+                <span class="hide-menu">Admins</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url 'view_all_admin' %}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-article"></i>
+                </span>
+                <span class="hide-menu">Active Admins</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url 'approve_admin' %}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-article"></i>
+                </span>
+                <span class="hide-menu">Approve Admins</span>
+              </a>
+            </li>
             
             <li class="nav-small-cap" >
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -135,42 +163,14 @@
             </li>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">REACH US</span>
+              <span class="hide-menu">Others</span>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'visitor_feedback' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'admin_feedback' %}" aria-expanded="false">
                 <span>
                   <i class="ti ti-login"></i>
                 </span>
-                <span class="hide-menu">Feedback</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'contact_us' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-user-plus"></i>
-                </span>
-                <span class="hide-menu">Contact</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">EXTRA</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/index" aria-expanded="false">
-                <span>
-                  <i class="ti ti-mood-happy"></i>
-                </span>
-                <span class="hide-menu">About</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="/index" aria-expanded="false">
-                <span>
-                  <i class="ti ti-aperture"></i>
-                </span>
-                <span class="hide-menu">Privacy Policy</span>
+                <span class="hide-menu">Feedbacks</span>
               </a>
             </li>
           </ul>
@@ -193,14 +193,14 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+              {% comment %} <a class="nav-link nav-icon-hover" href="javascript:void(0)">
                 <i class="ti ti-bell-ringing"></i>
                 <div class="notification bg-primary rounded-circle"></div>
-              </a>
+              </a> {% endcomment %}
             </li>
-            <li>
-              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                <h3>Welcome {{user.username}} </h3>
+            <li style="display:flex;align-items:center">
+              <a class="nav-link" href="javascript:void(0)" >
+                <h3>Welcome <strong>{{user.username}}</strong> </h3>
               </a>
             </li>
           </ul>

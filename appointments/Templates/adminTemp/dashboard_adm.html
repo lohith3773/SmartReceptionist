@@ -229,7 +229,7 @@
                         </div>
                         <div class="text-end">
                             <a class="btn btn-outline-primary"
-                               href="{% url '' %}">
+                               href="{% url 'home' %}">
                                 View More Admins</a>
                         </div>
                     </div>
@@ -251,8 +251,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Visitor</th>
+                                    <th>Email</th>
                                     <th>Address</th>
-                                    <th>Approval</th>
                                 </tr>
                                 </thead>
 
@@ -261,14 +261,8 @@
                                     <tr>
                                         <td>{{ a.id }}</td>
                                         <td>{{ a.first_name }} {{ a.last_name }}</td>
+                                        <td>{{ a.email_address }} </td>
                                         <td>{{ a.address }}</td>
-                                        {% if a.status is True %}
-                                            <td style="background-color: lightgreen; font-weight: bold">
-                                                Approved
-                                            </td>
-                                        {% elif a.status is False %}
-                                            <td style="background-color: lightyellow">Pending</td>
-                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -276,7 +270,7 @@
                         </div>
                         <div class="text-end">
                             <a class="btn btn-outline-primary"
-                               href="{% url '' %}">
+                               href="{% url 'admin_visitors' %}">
                                 View More Visitors</a>
                         </div>
                     </div>
@@ -308,7 +302,7 @@
                                     <tr>
                                         <td>{{ a.id }}</td>
                                         <td>{{ a.first_name }} {{ a.last_name }}</td>
-                                        <td>{{ a.service_field }}</td>
+                                        <td>{{ a.role }}</td>
                                         {% if a.status is True %}
                                             <td style="background-color: lightgreen; font-weight: bold">
                                                 Approved
@@ -327,7 +321,7 @@
                         </div>
                         <div class="text-end">
                             <a class="btn btn-outline-primary"
-                               href="{% url '' %}">
+                               href="{% url 'admin_managers' %}">
                                 View More Managers</a>
                         </div>
                     </div>

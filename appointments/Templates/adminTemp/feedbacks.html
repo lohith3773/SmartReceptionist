@@ -20,7 +20,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-l font-weight-bold text-primary text-uppercase mb-1">
-                                    Total Visitors
+                                    Total Feedbacks
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{ cust_count }}</div>
                             </div>
@@ -41,7 +41,7 @@
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">All Visitors</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">All Feedbacks</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -49,11 +49,10 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Picture</th>
-                                    <th>Visitor</th>
+                                    <th>Name</th>
                                     <th>Email</th>
-                                    <th>Address</th>
-                                    <th>Country</th>
+                                    <th>Subject</th>
+                                    <th>Message</th>
                                 </tr>
                                 </thead>
 
@@ -62,11 +61,10 @@
                                 {% for c in cust %}
                                     <tr>
                                         <td>{{ c.id }}</td>
-                                        <td class="text-center"><img src="{{ c.image }}" width="60 px" height="60 px" class="rounded-circle"></td>
-                                        <td>{{ c.first_name }} {{ c.last_name }}</td>
-                                        <td>{{ c.email_address }}</td>
-                                        <td>{{ c.address }}, {{ c.postcode }}</td>
-                                        <td>{{ c.country}} </td>
+                                        <td>{{ c.name}} </td>
+                                        <td>{{ c.email }}</td>
+                                        <td>{{ c.subject }}</td>
+                                        <td>{{ c.message }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

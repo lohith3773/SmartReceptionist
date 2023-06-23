@@ -7,6 +7,11 @@ urlpatterns = [
     path('login/admin', views.login_adm_view, name='login_admin'), # Login Admin
     path('dashboard/admin/', views.dashboard_adm_view, name='admin_dashboard'),  # Admin dashboard
     path('profile/admin/', views.profile_adm_view, name='admin_profile'),  # Admin profile
+    # Admin - Admin
+    path('view/admins/', views.admin_adm_view, name='admin_admin'),  # Admins section
+    path('approve/admins/', views.approve_adm_adm_view, name='approve_admin'),  # Approve engineer accounts
+    path('approve/admin=<int:pk>', views.approve_adm_adm_action, name='approve_adm_action'),  # Approve admin action
+    path('view/all-admins/', views.all_adm_adm_view, name='view_all_admin'),  # View all engineer accounts
     #Admin - Appointments
     path('view/appointments/', views.appointment_adm_view, name='appointment_admin'),  # Admin appointments
     path('book-appointment/admin', views.book_app_adm_view, name='book_app_admin'),  # Book an appointment
@@ -17,6 +22,7 @@ urlpatterns = [
     path('appointment-admin/complete=<int:pk>', views.complete_app_adm_action, name='complete_app_adm_action'),  # Complete appointment action
     #Admin - Visitor
     path('view/visitor/', views.visitor_adm_view, name='admin_visitors'),  # Customers section
+    path('admin/feedback/', views.feedback_adm_view, name='admin_feedback'),
     #Admin - Manager
     path('view/managers/', views.manager_adm_view, name='admin_managers'),  # Engineers section
     path('approve/managers/', views.approve_mgr_adm_view, name='approve_manager'),  # Approve engineer accounts
@@ -32,6 +38,8 @@ urlpatterns = [
     path('visitor/feedback/', views.feedback_visitor_view, name='visitor_feedback'),
     path('visitor/completed-appointments', views.completed_app_visitors_view, name='visitor_completed_appointments'),  # View pending appointments
     path('contact/', views.contact_us, name='contact_us'),
+    path('aboutus/', views.aboutus, name='about_us'),
+    
     #Manager
     path('login/manager', views.login_mgr_view, name='login_manager'), # Login Manager
     path('manager/profile', views.profile_mgr_view, name='profile_manager'),  # Manager profile
