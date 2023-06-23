@@ -66,12 +66,13 @@ def register_visitor_view(request):
                             )
                 v.save()
                 create_dataset(new_user)
+                # train_model()
                 mgrgroup = Group.objects.get(name = 'Visitor')
                 new_user.groups.add(mgrgroup)
                 login(request, new_user)
                 
                 messages.add_message(request, messages.INFO, 'Registration successful!')
-                return redirect('profile_visitor')
+                return redirect('visitor_profile')
 
             else:  # if date of birth is invalid
                 registration_form.add_error('dob', 'Invalid date of birth.')

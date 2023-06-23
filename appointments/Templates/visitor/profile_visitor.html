@@ -21,16 +21,18 @@
                             <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
                                 <div class="card card-profile">
                                     <div class="row justify-content-center">
-                                        <div class="col-lg-3 order-lg-2">
+                                        <div class="col-lg-6">
                                             <div class="card-profile-image">
+                                            <br><br>
+
                                                 <a href="#">
-                                                    <img src="{{ vis.image.url }}"
+                                                    <img src="{{ vis.image.url }}" width=100%
                                                          class="rounded-circle" alt="">
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
-                                    <br><br><br><br>
+                                    <br><br>
                                     <div class="card-body pt-0">
                                         <div class="row">
                                             <div class="center">
@@ -79,7 +81,7 @@
                                                             <input readonly type="email"
                                                                    id="input-email"
                                                                    class="form-control form-control-alternative"
-                                                                   placeholder="{{ user.email }}">
+                                                                   placeholder="{{ vis.email_address }}">
                                                         </div>
                                                     </div>
                                                 </div>
