@@ -162,8 +162,8 @@ def book_app_adm_view(request):  # book appointment
                 if check_eng_availability(eng, app_form.cleaned_data.get('app_date'),app_form.cleaned_data.get('app_time')):  # check if appointment is available during that slot
                     app = Appointment(manager=eng, visitor=cust,
                                       description=app_form.cleaned_data.get('description'),
-                                      app_date=app_form.cleaned_data.get('app_date'),
-                                      app_time=app_form.cleaned_data.get('app_time'),
+                                      appointment_date=app_form.cleaned_data.get('app_date'),
+                                      appointment_time=app_form.cleaned_data.get('app_time'),
                                       status=True)  # create new appointment
                     app.save()
                     messages.add_message(request, messages.INFO, 'Appointment created.')
@@ -545,7 +545,7 @@ def profile_visitor_view(request):
                         vis.save()
 
                         messages.add_message(request, messages.INFO, 'Profile updated successfully!')
-                        return redirect('profile_visitor.html')
+                        return redirect('visitor_profile')
                     else:
                         visitor_update_form.add_error('dob', 'Invalid date of birth.')
                         context = {
@@ -846,7 +846,7 @@ def feedback_visitor_view(request):
                     mail_admins(subject, message)
                     messages.add_message(request, messages.INFO, 'Thank you for submitting your feedback.')
 
-                    return redirect('feedback_vis.html')
+                    return redirect('visitor_feedback')
                 except:
                     feedback_form.add_error('Email',
                                             'Try again.')
@@ -1331,6 +1331,7 @@ def index(request):
     return redirect('/')
 
 def home(request):
+    logout(request)
     return render(request, 'index.html')
 
 def aboutus(request):

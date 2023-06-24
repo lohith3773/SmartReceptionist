@@ -19,7 +19,7 @@ import datetime
 from django.core.mail import send_mail, mail_admins
 from appointments.forms import VisitorAppointmentForm
 from appointments.views import index
-
+import asyncio
 BASE_DIR = str(settings.BASE_DIR)
 
 
@@ -66,10 +66,12 @@ def register_visitor_view(request):
                             )
                 v.save()
                 create_dataset(new_user)
-                # train_model()
+                
                 mgrgroup = Group.objects.get(name = 'Visitor')
                 new_user.groups.add(mgrgroup)
                 login(request, new_user)
+                redirect('visitor_profile')
+                # train_model()
                 
                 messages.add_message(request, messages.INFO, 'Registration successful!')
                 return redirect('visitor_profile')
@@ -90,7 +92,7 @@ def register_visitor_view(request):
 def register_manager_view(request):  # Register manager
     if request.method == "POST":
         registration_form = ManagerRegistrationForm(request.POST, request.FILES)
-        if registration_form.is_valid():  # if form is valid
+        if registration_form.is_valid():  # if form is validf
             dob = registration_form.cleaned_data.get('dob')  # get date of birth from form
             if dob < timezone.now().date():  # if date of birth is valid
                 new_user = User.objects.create_user(username=registration_form.cleaned_data.get('username'),
@@ -129,22 +131,16 @@ def register_manager_view(request):  # Register manager
 
 
 def home(request):
+    logout(request)
     return render(request, 'home.html')
 
 def trainn(request):
     train_model()
-    return render(request, 'dashboard.html')
+    return render(request, 'index.html')
 
 def logout_view(request):
     logout(request)
     return redirect('/')
-
-def login_new_manager(request):
-    user = authenticate(request,username = 'manager3',password ='ww@123321') 
-    if user is not None:
-        login(request, user)
-        return redirect('profile_manager')
-    return redirect('index')
 
 def login_new_visitor(request):
     user = authenticate(request,username = 'lohi',password ='ww@123321') 

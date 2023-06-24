@@ -20,7 +20,7 @@ from keras_vggface.vggface import VGGFace
 from keras.models import load_model
 from django.shortcuts import render, redirect
 
-camera = 1
+camera = 2
 BASE_DIR = str(settings.BASE_DIR)
 
 def create_dataset(user):
@@ -177,8 +177,7 @@ def recognize_face():
                             verified_label = name
                         if name == verified_label:
                             verified_count += 1
-                        else:
-                            verified_count = 0
+                        
                     verification_counter += 1
                 else:
                     name = "Unknown"

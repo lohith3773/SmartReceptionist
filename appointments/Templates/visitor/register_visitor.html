@@ -77,7 +77,7 @@
                   {% comment %} <img src="{% static 'images/logo.png' %}" alt=""> {% endcomment %}
                   <span>Register</span>
                 </a>
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data" target="_blank">
                     {% csrf_token %}
                     <div class="mb-4">
                         <label class="form-label" for="input-username">Username</label>
